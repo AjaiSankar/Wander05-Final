@@ -44,6 +44,8 @@ dependencies:
   shimmer: ^3.0.0
   video_player: ^2.8.2
   http: ^1.2.0
+  firebase_auth: ^4.17.4
+  datetime_picker_formfield: ^2.0.1
 
 
 dev_dependencies:
