@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 class LandingPage extends StatefulWidget {
@@ -95,7 +96,7 @@ class _LandingPageState extends State<LandingPage> {
                   SizedBox(height: 20), // Add space between text and button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle button press if needed
+                      Navigator.pushNamed(context, '/login');
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
