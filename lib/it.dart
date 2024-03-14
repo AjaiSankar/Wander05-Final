@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wander05_final/itinerary.dart';
 
 class TripPreferencesPage extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class TripPreferencesPage extends StatefulWidget {
 class _TripPreferencesPageState extends State<TripPreferencesPage> {
   int _currentStep = 0;
 
-  String? destinationCountry;
+  String? destinationCountry ;
   String? budget;
   String? travelStyle;
   List<String> interests = [];
@@ -21,9 +22,8 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
   List<String> travelStyles = ['Adventure', 'Relaxation', 'Culture', 'Sightseeing'];
   List<String> accommodationTypes = ['Hotel', 'Resort', 'Hostel', 'Vacation Rental'];
   List<String> transportationTypes = ['Public Transport', 'Rental Car', 'Taxi', 'Bicycle'];
-  List<String> activityTypes = ['Outdoor', 'Indoor', 'Sightseeing', 'Cultural', 'Adventure'];
+  List<String> activityTypes = ['Outdoor', 'Indoor', 'Sightseeing', 'Cultural'];
   List<String> cuisineTypes = ['Traditional', 'International', 'Vegetarian', 'Vegan'];
-  List<String> tripDurations = ['1', '2', '3', '4', '5', '6', '7+'];
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,25 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
         type: StepperType.vertical,
         currentStep: _currentStep,
         onStepContinue: () {
-          if (_currentStep < 7) {
+          if (_currentStep < 8) {
             setState(() {
-              _currentStep += 1;
+              _currentStep++;
             });
+          }
+           else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Itinerary(
+                        destinationCountry: destinationCountry!,
+                        budget: budget!,
+                        travelStyle: travelStyle!,
+                        interestsNew: interests,
+                        accommodationType: accommodationType!,
+                        transportationType: transportationType!,
+                        activityType: activityType!,
+                        cuisineType: cuisineType!,
+                        tripDuration: tripDuration!)));
           }
         },
         onStepCancel: () {
@@ -50,10 +65,10 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
         },
         steps: [
           Step(
-            title: Text('Destination Country'),
-            content: _buildDropdownField(
+            title: Text('Destination Place'),
+            content: _buildTextField(
               label: 'Destination Country',
-              value: destinationCountry,
+              hint: 'Enter your destination place',
               onChanged: (value) {
                 setState(() {
                   destinationCountry = value;
@@ -80,10 +95,10 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
               value: travelStyle,
               onChanged: (value) {
                 setState(() {
-                  travelStyle = value;
+                  travelStyle = value!;
                 });
               },
-              items: travelStyles,
+              items: travelStyles.toSet().toList(), // Convert to set to remove duplicates
             ),
           ),
           Step(
@@ -100,7 +115,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
                   }
                 });
               },
-              items: ['Adventure', 'Nature', 'History', 'Food', 'Shopping'],
+              items: ['Nature', 'History', 'Food', 'Shopping'],
             ),
           ),
           Step(
@@ -110,10 +125,10 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
               value: accommodationType,
               onChanged: (value) {
                 setState(() {
-                  accommodationType = value;
+                  accommodationType = value!;
                 });
               },
-              items: accommodationTypes,
+              items: accommodationTypes.toSet().toList(), // Convert to set to remove duplicates
             ),
           ),
           Step(
@@ -123,10 +138,10 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
               value: transportationType,
               onChanged: (value) {
                 setState(() {
-                  transportationType = value;
+                  transportationType = value!;
                 });
               },
-              items: transportationTypes,
+              items: transportationTypes.toSet().toList(), // Convert to set to remove duplicates
             ),
           ),
           Step(
@@ -136,10 +151,10 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
               value: activityType,
               onChanged: (value) {
                 setState(() {
-                  activityType = value;
+                  activityType = value!;
                 });
               },
-              items: activityTypes,
+              items: activityTypes.toSet().toList(), // Convert to set to remove duplicates
             ),
           ),
           Step(
@@ -149,23 +164,23 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
               value: cuisineType,
               onChanged: (value) {
                 setState(() {
-                  cuisineType = value;
+                  cuisineType = value!;
                 });
               },
-              items: cuisineTypes,
+              items: cuisineTypes.toSet().toList(), // Convert to set to remove duplicates
             ),
           ),
           Step(
             title: Text('Trip Duration'),
-            content: _buildDropdownField(
+            content: _buildTextField(
               label: 'Trip Duration',
-              value: tripDuration,
+              hint: "Enter your trip duration",
               onChanged: (value) {
                 setState(() {
                   tripDuration = value;
+                  print("This is Trip DFuration $tripDuration");
                 });
               },
-              items: tripDurations,
             ),
           ),
         ],
@@ -237,4 +252,3 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
     );
   }
 }
-
