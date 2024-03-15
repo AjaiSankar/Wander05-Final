@@ -19,18 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Itinerary(
-        startplace: 'Idukki',
-      destinationCountry: 'Palakkad',
-      budget: '2500',
-      travelStyle: 'Adventure',
-      interestsNew: ['Nature'],
-      accommodationType: 'Resort',
-      transportationType: 'Public',
-      activityType: 'Sightseeing',
-      cuisineType: 'Vegetarian',
-      tripDuration: '4',
-    ),
+      home: HomePage(),
       routes: {
         '/login': (context) => LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
@@ -193,63 +182,70 @@ class _HomePageState extends State<HomePage> {
 ),
 
             const SizedBox(height: 20),
-            Container(
-              width: double.infinity, // Take full width of the screen
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/main6.jpg'),
-                  fit: BoxFit.cover, // Cover the full container area
+           Padding(
+  padding: const EdgeInsets.all(20.0), // Add padding to the container
+  child: Container(
+    width: double.infinity, // Take full width of the screen
+    decoration: const BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('images/main6.jpg'),
+        fit: BoxFit.cover, // Cover the full container area
+      ),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0), // Add padding to the text
+          child: Text(
+            '', // Removed the "with zero effort" part for simplicity
+            style: TextStyle(
+              fontSize: 32, // Increased font size for a stronger emphasis
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20), // Add spacing between text and button
+        const Text(
+          '',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 40), // Increase spacing between text and button
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              // Handle button press
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            ),
+            child: Container(
+              height: 60, // Maintain button height
+              width: 150, // Decrease button width
+              child: Center(
+                child: Text(
+                  'Plan my Trip',
+                  style: TextStyle(
+                    fontSize: 20, // Maintain button text size
+                  ),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16.0), // Add padding to the text
-                    child: Text(
-                      'Plan your next trip', // Removed the "with zero effort" part for simplicity
-                      style: TextStyle(
-                        fontSize: 32, // Increased font size for a stronger emphasis
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20), // Add spacing between text and button
-                  const Text(
-                    'With our easy-to-use app planning your\n next adventure is a breeze!',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 40), // Increase spacing between text and button
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle button press
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      minimumSize: MaterialStateProperty.all<Size>(const Size(30, 60)),
-                    ),
-                    child: Container(
-                      height: 60, // Increase button height
-                      child: const Center(
-                        child: Text(
-                          'Plan my Trip',
-                          style: TextStyle(
-                            fontSize: 20, // Increased button text size
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
+
             const SizedBox(height: 40),
             const Padding(
               padding: EdgeInsets.only(left: 16.0), // Add padding to the left of the text

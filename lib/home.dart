@@ -11,6 +11,7 @@ class TravelApp extends StatelessWidget {
       title: 'Travel App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Montserrat',
       ),
       home: HomePage(),
     );
@@ -31,7 +32,15 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Travel App'),
+        title: Text(
+          'Travel App',
+          style: TextStyle(
+            fontFamily: 'Pacifico',
+            fontSize: 28.0,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0.0,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -51,7 +60,7 @@ class HomePage extends StatelessWidget {
                   Text(
                     'Explore the World',
                     style: TextStyle(
-                      fontSize: 28.0,
+                      fontSize: 32.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -69,10 +78,15 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       // Navigate to itinerary generation page
                     },
-                    child: Text(
-                      'Generate Itinerary',
-                      style: TextStyle(fontSize: 16.0),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange,
+                      textStyle: TextStyle(fontSize: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
                     ),
+                    child: Text('Generate Itinerary'),
                   ),
                 ],
               ),
@@ -90,7 +104,7 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             Container(
-              height: 150.0,
+              height: 180.0,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: topDestinations.length,
@@ -101,15 +115,27 @@ class HomePage extends StatelessWidget {
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
-                      width: 120.0,
+                      width: 150.0,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                         image: DecorationImage(
                           image: AssetImage('assets/${topDestinations[index].toLowerCase()}_image.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
-                      child: Center(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.7),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
                         child: Text(
                           topDestinations[index],
                           style: TextStyle(
@@ -126,35 +152,35 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             ListTile(
-              leading: Icon(Icons.favorite),
+              leading: Icon(Icons.favorite, color: Colors.red),
               title: Text('Liked Destinations'),
               onTap: () {
                 // Navigate to liked destinations page
               },
             ),
             ListTile(
-              leading: Icon(Icons.directions_car),
+              leading: Icon(Icons.directions_car, color: Colors.blue),
               title: Text('Transport Booking'),
               onTap: () {
                 // Navigate to transport booking page
               },
             ),
             ListTile(
-              leading: Icon(Icons.hotel),
+              leading: Icon(Icons.hotel, color: Colors.green),
               title: Text('Hotel Booking'),
               onTap: () {
                 // Navigate to hotel booking page
               },
             ),
             ListTile(
-              leading: Icon(Icons.wb_sunny),
+              leading: Icon(Icons.wb_sunny, color: Colors.orange),
               title: Text('Weather Alerts'),
               onTap: () {
                 // Navigate to weather alerts page
               },
             ),
             ListTile(
-              leading: Icon(Icons.warning),
+              leading: Icon(Icons.warning, color: Colors.red),
               title: Text('Disaster Alerts'),
               onTap: () {
                 // Navigate to disaster alerts page
