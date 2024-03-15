@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Itinerary(
         startplace: 'Idukki',
-      destinationCountry: 'Kottayam',
+      destinationCountry: 'Palakkad',
       budget: '2500',
       travelStyle: 'Adventure',
       interestsNew: ['Nature'],
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       transportationType: 'Public',
       activityType: 'Sightseeing',
       cuisineType: 'Vegetarian',
-      tripDuration: '2',
+      tripDuration: '4',
     ),
       routes: {
         '/login': (context) => LoginPage(),

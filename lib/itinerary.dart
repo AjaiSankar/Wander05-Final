@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Itinerary extends StatefulWidget {
   final String startplace;
@@ -53,7 +54,7 @@ class _ItineraryState extends State<Itinerary> {
     String tripDuration,
   ) async {
     setState(() {
-      _typingText = 'Generating itinerary...';
+      _typingText = 'Generating itinerary';
     });
 
     final response = await http.post(
@@ -72,7 +73,7 @@ class _ItineraryState extends State<Itinerary> {
           {
             "role": "user",
             "content":
-                "Generate a personalized travel itinerary for a trip to $destinationCountry starting from $startplace with a budget of $budget. The traveler is interested in a $travelStyle vacation and enjoys $interestsNew. They are looking for $accommodationType accommodations and prefer $transportationType transportation. The itinerary should include $activityType activities and $cuisineType dining options. Please provide a detailed itinerary with daily recommendations for $tripDuration days, including suggested destinations, activities, and dining options.Give names for each accomodation and food spots to take food Also make sure that the places and path chosen from $startplace to $destinationCountry is optimal such that choose places on the path from $startplace to $destinationCountry also. The format for the plan should be well structured so that it can be easily designed to form a beautiful ui for a travel planning app. include time also",
+                "Generate a personalized travel itinerary for a trip to $destinationCountry starting from $startplace with a budget of $budget. The traveler is interested in a $travelStyle vacation and enjoys $interestsNew. They are looking for $accommodationType accommodations and prefer $transportationType transportation. The itinerary should include $activityType activities and $cuisineType dining options. Please provide a detailed itinerary with daily recommendations for $tripDuration days, including suggested destinations, activities, and dining options. Give names for each accommodation and food spots to take food. Also make sure that the places and path chosen from $startplace to $destinationCountry is optimal such that choose places on the path from $startplace to $destinationCountry also. The format for the plan should be as follows: Day(Activity/Travel), Morning Activity(this should be the subheading), Afternoon Activity(this should be the subheading), Evening Activity",
           }
         ],
       }),
@@ -82,6 +83,9 @@ class _ItineraryState extends State<Itinerary> {
         result = jsonDecode(response.body)['choices'][0]['message']['content'];
         _typingText = '';
       });
+
+      // Print the response to the console
+      print("Response: $result");
     } else {
       setState(() {
         _typingText = '';
@@ -93,148 +97,236 @@ class _ItineraryState extends State<Itinerary> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'ITINERARY',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        'Travel Itinerary',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 22,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                fetchResponse(
-                  widget.startplace,
-                  widget.destinationCountry,
-                  widget.budget,
-                  widget.travelStyle,
-                  widget.interestsNew,
-                  widget.accommodationType,
-                  widget.transportationType,
-                  widget.activityType,
-                  widget.cuisineType,
-                  widget.tripDuration,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // Button color
-                onPrimary: Colors.white, // Text color
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  _typingText.isEmpty ? 'Generate Itinerary' : '$_typingText...',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Generated Itinerary:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            const SizedBox(height: 10),
-            _buildItinerary(),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Save Plan
-                  },
-                  icon: Icon(Icons.save),
-                  label: Text('Save Plan'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green, // Button color
-                    onPrimary: Colors.white, // Text color
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Regenerate Plan
-                  },
-                  icon: Icon(Icons.refresh),
-                  label: Text('Regenerate Plan'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.orange, // Button color
-                    onPrimary: Colors.white, // Text color
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildItinerary() {
-    if (result.isEmpty) {
-      return Text("No itinerary generated yet");
-    }
-
-    List<String> days = result.split('Day ');
-    days.removeAt(0);
-
-    return Column(
-      children: days.map((day) {
-        return _buildDayCard(day);
-      }).toList(),
-    );
-  }
-
-  Widget _buildDayCard(String dayContent) {
-  List<String> sections = dayContent.split(RegExp(r'Morning|Afternoon|Evening'));
-
-  return Card(
-    margin: EdgeInsets.symmetric(vertical: 10),
-    elevation: 3,
-    color: Colors.blue.shade50,
-    child: Padding(
+      backgroundColor: Colors.blue,
+      elevation: 0, // Remove elevation
+    ),
+    body: Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            sections.first.trim(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.blue.shade900,
-            ),
-          ),
-          Divider(color: Colors.blue.shade900),
-          for (int i = 1; i < sections.length; i++)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                _cleanText(sections[i].trim()),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.blue.shade800,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  fetchResponse(
+                    widget.startplace,
+                    widget.destinationCountry,
+                    widget.budget,
+                    widget.travelStyle,
+                    widget.interestsNew,
+                    widget.accommodationType,
+                    widget.transportationType,
+                    widget.activityType,
+                    widget.cuisineType,
+                    widget.tripDuration,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue, // Button color
+                  onPrimary: Colors.white, // Text color
+                  padding: EdgeInsets.all(16),
+                ),
+                child: Text(
+                  _typingText.isEmpty ? 'Regenerate Itinerary' : '$_typingText...',
+                  style: TextStyle(fontSize: 18),
                 ),
               ),
+              // Save Plan button with animation
+              AnimatedContainer(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add functionality to save plan
+                    // For example: savePlan();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue, // Button color
+                    onPrimary: Colors.white, // Text color
+                    padding: EdgeInsets.all(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.save),
+                      SizedBox(width: 8),
+                      Text(
+                        'Save Plan',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _buildItinerary(),
+              ),
             ),
+          ),
         ],
       ),
     ),
   );
 }
 
-String _cleanText(String text) {
-  // Remove asterisks and unwanted symbols
-  return text.replaceAll(RegExp(r'[*~]'), '').replaceAll('&nbsp;', ' ');
+
+
+  List<Widget> _buildItinerary() {
+  if (result.isEmpty) {
+    return [Text("No itinerary generated yet")];
+  }
+
+  List<String> days = result.split('Day ');
+  days.removeAt(0);
+
+  List<Widget> itineraryWidgets = [];
+  int dayCounter = 1;
+
+  for (String day in days) {
+    List<String> sections = day.split(RegExp(r'Morning|Afternoon|Evening'));
+    String heading = 'Day $dayCounter';
+    List<String> activities = sections.sublist(1);
+
+    itineraryWidgets.add(
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Text(
+          heading,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.blue.shade900,
+          ),
+        ),
+      ),
+    );
+
+    itineraryWidgets.addAll([
+      _buildSlider('Morning', activities.length > 0 ? activities[0].trim() : ''),
+      _buildSlider('Afternoon', activities.length > 1 ? activities[1].trim() : ''),
+      _buildSlider('Evening', activities.length > 2 ? activities[2].trim() : ''),
+    ]);
+
+    dayCounter++;
+  }
+
+  return itineraryWidgets;
 }
 
+Widget _buildSlider(String title, String content) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      CarouselSlider(
+        options: CarouselOptions(
+          height: 200.0,
+          enlargeCenterPage: true,
+          autoPlay: true,
+          autoPlayInterval: Duration(seconds: 3),
+          autoPlayAnimationDuration: Duration(milliseconds: 800),
+          enableInfiniteScroll: false,
+          pauseAutoPlayOnTouch: true,
+          viewportFraction: 0.8,
+        ),
+        items: content.isNotEmpty
+            ? [
+                Builder(
+                  builder: (BuildContext context) {
+                    return _buildActivityCard(content, title);
+                  },
+                ),
+              ]
+            : [Text('No activity for this time')],
+      ),
+    ],
+  );
 }
+
+  Widget _buildActivityCard(String activityContent, String heading) {
+  return GestureDetector(
+    onTap: () {
+      _showDetailedPlan(context, activityContent);
+    },
+    child: Card(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      elevation: 3,
+      color: Colors.blue.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              heading,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.blue.shade900,
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: ListView(
+                children: [
+                  Text(
+                    _cleanText(activityContent),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue.shade800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+
+
+  void _showDetailedPlan(BuildContext context, String activityContent) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Detailed Plan'),
+          content: Text(activityContent),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _cleanText(String text) {
+    // Remove asterisks and unwanted symbols
+    return text.replaceAll(RegExp(r'[*~]'), '').replaceAll('&nbsp;', ' ');
+  }
+}
+
