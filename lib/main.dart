@@ -7,7 +7,6 @@ import 'package:wander05_final/it.dart';
 import 'package:wander05_final/itinerary.dart';
 import 'package:wander05_final/landing.dart';
 import 'package:wander05_final/login.dart';
-import 'package:wander05_final/map.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,14 +20,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: TripMapPage(
-  startLocation: LatLng(37.7749, -122.4194), // San Francisco, CA
-  destinationLocation: LatLng(34.0522, -118.2437), // Los Angeles, CA
-  places: [
-    LatLng(36.7783, -119.4179), // Fresno, CA
-    LatLng(33.4484, -112.0740), // Phoenix, AZ
-    // Add more coordinates for additional places mentioned in the trip plan
-  ],
+      home: Itinerary(
+  startplace: 'Kottayam',
+  destinationCountry: 'Idukki',
+  budget: '2000',
+  travelStyle: 'Adventure',
+  interestsNew: ['Hiking', 'Sightseeing'],
+  accommodationType: 'Hotel',
+  transportationType: 'Flight',
+  activityType: 'Outdoor',
+  cuisineType: 'Italian',
+  tripDuration: '3',
 ),
 
       routes: {
@@ -517,5 +519,72 @@ class DistrictSearch extends SearchDelegate<String> {
       default:
         return Container(); // Return a default container or page if the district page is not available
     }
+  }
+}
+
+class PlanWithImagesAndReviews extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 40),
+        const Padding(
+          padding: EdgeInsets.only(left: 16.0),
+          child: Text(
+            'Explore Your Destination',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 20),
+        // Replace the dummy data with real data
+        _buildDestinationCard('Kottayam', 'Kerala', 'images/beach1.jpg', 'Amazing place for sightseeing and adventure activities. Highly recommended!'),
+        const SizedBox(height: 20),
+        _buildDestinationCard('Idukki', 'Kerala', 'images/beach2.jpg', 'A paradise for nature lovers. Stunning views and tranquility awaits!'),
+        const SizedBox(height: 20),
+        _buildDestinationCard('Trivandrum', 'Kerala', 'images/beach3.jpg', 'Experience the rich culture and heritage of Kerala in its capital city.'),
+      ],
+    );
+  }
+
+  Widget _buildDestinationCard(String name, String location, String imagePath, String review) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Image.asset(
+            imagePath,
+            fit: BoxFit.cover,
+            height: 200,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  location,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  review,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
