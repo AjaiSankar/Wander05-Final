@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/it.dart';
 import 'package:wander05_final/itinerary.dart';
 import 'package:wander05_final/landing.dart';
 import 'package:wander05_final/login.dart';
+import 'package:wander05_final/map.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +21,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: TripMapPage(
+  startLocation: LatLng(37.7749, -122.4194), // San Francisco, CA
+  destinationLocation: LatLng(34.0522, -118.2437), // Los Angeles, CA
+  places: [
+    LatLng(36.7783, -119.4179), // Fresno, CA
+    LatLng(33.4484, -112.0740), // Phoenix, AZ
+    // Add more coordinates for additional places mentioned in the trip plan
+  ],
+),
+
       routes: {
         '/login': (context) => LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
@@ -35,31 +46,47 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<String> images = [
-    'images/f.jpg',
+    'images/main1.jpg',
     'images/main2.jpg',
     'images/main3.jpg',
   ];
 
   final List<String> featureTexts = [
-    'Feature 1: Discover new places',
-    'Feature 2: Plan your trips',
-    'Feature 3: Share experiences',
+    '',
+    '',
+    '',
   ];
 
   final List<Map<String, dynamic>> weekendTrips = [
     {
-      'image': 'images/f.jpg',
-      'name': 'Trip 1',
+      'image': 'images/wkt1.jpg',
+      'name': '',
     },
     {
-      'image': 'images/main2.jpg',
-      'name': 'Trip 2',
+      'image': 'images/wkt2.jpg',
+      'name': '',
     },
     {
-      'image': 'images/main3.jpg',
-      'name': 'Trip 3',
+      'image': 'images/wkt3.jpg',
+      'name': '',
     },
   ];
+
+  final List<Map<String, dynamic>> beaches = [
+    {
+      'image': 'images/beach1.jpg',
+      'name': '',
+    },
+    {
+      'image': 'images/beach2.jpg',
+      'name': '',
+    },
+    {
+      'image': 'images/beach3.jpg',
+      'name': '',
+    },
+  ];
+
 
   List<String> districts = [
     'Thiruvananthapuram',
@@ -227,7 +254,7 @@ class _HomePageState extends State<HomePage> {
               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             ),
             child: Container(
-              height: 60, // Maintain button height
+              height: 30, // Maintain button height
               width: 150, // Decrease button width
               child: Center(
                 child: Text(
@@ -254,6 +281,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
+            
             const SizedBox(height: 20),
             CarouselSlider.builder(
               itemCount: weekendTrips.length,
@@ -313,9 +341,85 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+
+
+
+            //Beaches
+            const SizedBox(height: 40),
+            const Padding(
+              padding: EdgeInsets.only(left: 16.0), // Add padding to the left of the text
+              child: Text(
+                'Beaches to catch some sun!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            const SizedBox(height: 40),
+            CarouselSlider.builder(
+              itemCount: beaches.length,
+              options: CarouselOptions(
+                height: 200.0,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                aspectRatio: 16 / 9,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                viewportFraction: 0.8,
+              ),
+              itemBuilder: (BuildContext context, int index, int realIndex) {
+                return Stack(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: AssetImage(beaches[index]['image']),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                beaches[index]['name'],
+                                style: const TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle button press
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                ),
+                                child: const Text('Explore'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
+          
         ),
+        
       ),
+
+      
       bottomNavigationBar: ConvexAppBar(
         backgroundColor: const Color.fromARGB(255, 12, 84, 193),
         items: [

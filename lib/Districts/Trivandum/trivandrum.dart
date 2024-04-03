@@ -33,7 +33,7 @@ class TrivandrumPage extends StatelessWidget {
 
   // Method to calculate the overview of total reviews
   Map<int, int> calculateReviewOverview() {
-    Map<int, int> overview = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
+    Map<int, int> overview = {5: 2, 4: 0, 3: 0, 2: 0, 1: 0};
     for (var review in userReviews) {
       overview[review.rating];
     }
@@ -47,7 +47,7 @@ class TrivandrumPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trivandrum Page'),
+        title: Text('Trivandrum Beauty'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -76,7 +76,7 @@ class TrivandrumPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Trivandrum on your mind?',
+                                    'Trivandrum on your mind ?',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -85,7 +85,7 @@ class TrivandrumPage extends StatelessWidget {
                                   ),
                                   SizedBox(height: 8),
                                   Text(
-                                    'Build, organize and maps\nout your best trip with WANDER05',
+                                    'Build, organize and map\nout your best trip with WANDER05',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -204,11 +204,11 @@ class TrivandrumPage extends StatelessWidget {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 children: [
-                  _buildSightCard('images/tvm/tvm2.jpg', 'Sight 1', 'Short description of sight 1', 4.5),
-                  _buildSightCard('images/tvm/tvm3.jpg', 'Sight 2', 'Short description of sight 2', 4.2),
-                  _buildSightCard('images/tvm/tvm4.jpg', 'Sight 3', 'Short description of sight 3', 4.8),
-                  _buildSightCard('images/tvm/tvm5.jpg', 'Sight 4', 'Short description of sight 4', 4.4),
-                  _buildSightCard('images/tvm/tvm6.jpg', 'Sight 5', 'Short description of sight 5', 4.6),
+                  _buildSightCard('images/tvm/tvm2.jpg', 'Trivadnrum Zoo', 'Short description of sight 1', 4.5),
+                  _buildSightCard('images/tvm/tvm3.jpg', 'Museum', 'Short description of sight 2', 4.2),
+                  _buildSightCard('images/tvm/tvm4.jpg', 'Sree Padmanabha Temple', 'Short description of sight 3', 4.8),
+                  _buildSightCard('images/tvm/tvm5.jpg', 'Varkala', 'Short description of sight 4', 4.4),
+                  _buildSightCard('images/tvm/tvm6.jpg', 'Kovalam Beach', 'Short description of sight 5', 4.6),
                 ],
               ),
 

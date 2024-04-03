@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -174,10 +175,7 @@ Widget build(BuildContext context) {
           SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: _buildItinerary(),
-              ),
+              child: _buildItinerary(),
             ),
           ),
         ],
@@ -186,117 +184,67 @@ Widget build(BuildContext context) {
   );
 }
 
-
-
-  List<Widget> _buildItinerary() {
+Widget _buildItinerary() {
   if (result.isEmpty) {
-    return [Text("No itinerary generated yet")];
+    return Center(child: Text("No itinerary generated yet"));
   }
 
   List<String> days = result.split('Day ');
   days.removeAt(0);
 
-  List<Widget> itineraryWidgets = [];
-  int dayCounter = 1;
-
-  for (String day in days) {
-    List<String> sections = day.split(RegExp(r'Morning|Afternoon|Evening'));
-    String heading = 'Day $dayCounter';
-    List<String> activities = sections.sublist(1);
-
-    itineraryWidgets.add(
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Text(
-          heading,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Colors.blue.shade900,
-          ),
-        ),
-      ),
-    );
-
-    itineraryWidgets.addAll([
-      _buildSlider('Morning', activities.length > 0 ? activities[0].trim() : ''),
-      _buildSlider('Afternoon', activities.length > 1 ? activities[1].trim() : ''),
-      _buildSlider('Evening', activities.length > 2 ? activities[2].trim() : ''),
-    ]);
-
-    dayCounter++;
-  }
-
-  return itineraryWidgets;
-}
-
-Widget _buildSlider(String title, String content) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      CarouselSlider(
-        options: CarouselOptions(
-          height: 200.0,
-          enlargeCenterPage: true,
-          autoPlay: true,
-          autoPlayInterval: Duration(seconds: 3),
-          autoPlayAnimationDuration: Duration(milliseconds: 800),
-          enableInfiniteScroll: false,
-          pauseAutoPlayOnTouch: true,
-          viewportFraction: 0.8,
-        ),
-        items: content.isNotEmpty
-            ? [
-                Builder(
-                  builder: (BuildContext context) {
-                    return _buildActivityCard(content, title);
-                  },
-                ),
-              ]
-            : [Text('No activity for this time')],
-      ),
+      for (String day in days)
+        _buildDayCard(day),
     ],
   );
 }
 
-  Widget _buildActivityCard(String activityContent, String heading) {
+Widget _buildDayCard(String day) {
+  List<String> sections = day.split(RegExp(r'Morning|Afternoon|Evening'));
+  String heading = sections[0].trim();
+  List<String> activities = sections.sublist(1);
+
+  return Card(
+    margin: EdgeInsets.symmetric(vertical: 8),
+    elevation: 3,
+    color: Colors.blue.shade50,
+    child: ExpansionTile(
+      title: Text(
+        heading,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Colors.blue.shade900,
+        ),
+      ),
+      children: [
+        for (var i = 0; i < activities.length; i++)
+          _buildActivityCard(activities[i].trim(), i + 1 == activities.length),
+      ],
+    ),
+  );
+}
+
+Widget _buildActivityCard(String activityContent, bool isLastActivity) {
   return GestureDetector(
     onTap: () {
       _showDetailedPlan(context, activityContent);
     },
-    child: Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      elevation: 3,
-      color: Colors.blue.shade50,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              heading,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.blue.shade900,
-              ),
-            ),
-            SizedBox(height: 10),
-            Expanded(
-              child: ListView(
-                children: [
-                  Text(
-                    _cleanText(activityContent),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue.shade800,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    child: Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: isLastActivity ? null : Border(bottom: BorderSide(color: Colors.grey)),
+      ),
+      child: Text(
+        activityContent,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue.shade800,
         ),
+        textAlign: TextAlign.left,
       ),
     ),
   );
@@ -304,29 +252,24 @@ Widget _buildSlider(String title, String content) {
 
 
 
-  void _showDetailedPlan(BuildContext context, String activityContent) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Detailed Plan'),
-          content: Text(activityContent),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  String _cleanText(String text) {
-    // Remove asterisks and unwanted symbols
-    return text.replaceAll(RegExp(r'[*~]'), '').replaceAll('&nbsp;', ' ');
-  }
+void _showDetailedPlan(BuildContext context, String activityContent) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Detailed Plan'),
+        content: Text(activityContent),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
+}
