@@ -97,13 +97,14 @@ class _ItineraryState extends State<Itinerary> {
     }
   }
 
-  @override
+ @override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       title: Text(
-        'Travel Itinerary',
+        widget.destinationCountry,
         style: TextStyle(
+          color: Colors.white,
           fontWeight: FontWeight.bold,
           fontSize: 22,
         ),
@@ -111,78 +112,82 @@ Widget build(BuildContext context) {
       backgroundColor: Colors.blue,
       elevation: 0, // Remove elevation
     ),
-    body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  fetchResponse(
-                    widget.startplace,
-                    widget.destinationCountry,
-                    widget.budget,
-                    widget.travelStyle,
-                    widget.interestsNew,
-                    widget.accommodationType,
-                    widget.transportationType,
-                    widget.activityType,
-                    widget.cuisineType,
-                    widget.tripDuration,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // Button color
-                  onPrimary: Colors.white, // Text color
-                  padding: EdgeInsets.all(16),
-                ),
-                child: Text(
-                  _typingText.isEmpty ? 'Regenerate Itinerary' : '$_typingText...',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              // Save Plan button with animation
-              AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Add functionality to save plan
-                    // For example: savePlan();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue, // Button color
-                    onPrimary: Colors.white, // Text color
-                    padding: EdgeInsets.all(16),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.save),
-                      SizedBox(width: 8),
-                      Text(
-                        'Save Plan',
+    body: Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        fetchResponse(
+                          widget.startplace,
+                          widget.destinationCountry,
+                          widget.budget,
+                          widget.travelStyle,
+                          widget.interestsNew,
+                          widget.accommodationType,
+                          widget.transportationType,
+                          widget.activityType,
+                          widget.cuisineType,
+                          widget.tripDuration,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blue, // Button color
+                        onPrimary: Colors.white, // Text color
+                        padding: EdgeInsets.all(16),
+                      ),
+                      child: Text(
+                        _typingText.isEmpty ? 'Regenerate Itinerary' : '$_typingText...',
                         style: TextStyle(fontSize: 18),
                       ),
-                    ],
-                  ),
+                    ),
+                    // Save Plan button with animation
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Add functionality to save plan
+                          // For example: savePlan();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.blue, // Button color
+                          onPrimary: Colors.white, // Text color
+                          padding: EdgeInsets.all(16),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.save),
+                            SizedBox(width: 8),
+                            Text(
+                              'Save Plan',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: SingleChildScrollView(
-              child: _buildItinerary(),
+                SizedBox(height: 20),
+                _buildItinerary(),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     ),
+    
   );
 }
+
 
 Widget _buildItinerary() {
   if (result.isEmpty) {
@@ -242,7 +247,7 @@ Widget _buildActivityCard(String activityContent, bool isLastActivity) {
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: Colors.blue.shade800,
+          color: const Color.fromARGB(255, 9, 11, 13),
         ),
         textAlign: TextAlign.left,
       ),
@@ -271,5 +276,4 @@ void _showDetailedPlan(BuildContext context, String activityContent) {
     },
   );
 }
-
 }
