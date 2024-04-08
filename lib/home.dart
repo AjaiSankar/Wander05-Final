@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase authentication package
 
 void main() {
   runApp(TravelApp());
@@ -185,6 +186,25 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 // Navigate to disaster alerts page
               },
+            ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                // Logout function
+                FirebaseAuth.instance.signOut();
+                // Navigate to login page
+                // (Assuming you have a LoginPage widget)
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+                textStyle: TextStyle(fontSize: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+              ),
+              child: Text('Logout'),
             ),
           ],
         ),

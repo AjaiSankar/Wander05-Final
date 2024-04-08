@@ -4,6 +4,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/UserProfilePage.dart';
+import 'package:wander05_final/disaster.dart';
 import 'package:wander05_final/it.dart';
 import 'package:wander05_final/itinerary.dart';
 import 'package:wander05_final/landing.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: DisasterPage(),
 
       routes: {
         '/login': (context) => LoginPage(),
