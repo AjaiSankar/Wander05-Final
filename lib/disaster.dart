@@ -44,8 +44,8 @@ class _DisasterPageState extends State<DisasterPage> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    String district = '';
-                    String type = '';
+                    String? district = '';
+                    String? type = '';
                     String intensity = '';
                     return StatefulBuilder(
                       builder: (BuildContext context, StateSetter setState) {
