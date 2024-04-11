@@ -5,6 +5,7 @@ import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/Districts/Trivandum/tvmexplore.dart';
 import 'package:wander05_final/it.dart';
 import 'package:wander05_final/landing.dart';
+import 'package:wander05_final/login.dart';
 
 void main() {
   runApp(MyApp());
