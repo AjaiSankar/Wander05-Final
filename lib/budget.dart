@@ -3,6 +3,8 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
 class TripPlanningPage extends StatefulWidget {
+  const TripPlanningPage({super.key});
+
   @override
   _TripPlanningPageState createState() => _TripPlanningPageState();
 }
@@ -115,7 +117,7 @@ class _TripPlanningPageState extends State<TripPlanningPage> {
                   _planTrip();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.teal,
+                  backgroundColor: Colors.teal,
                 ),
                 child: const Text('Plan My Trip', style: TextStyle(color: Colors.white, fontSize: 20)),
               ),

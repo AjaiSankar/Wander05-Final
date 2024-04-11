@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wander05_final/itinerary.dart';
 
 class TripPreferencesPage extends StatefulWidget {
+  const TripPreferencesPage({super.key});
+
   @override
   _TripPreferencesPageState createState() => _TripPreferencesPageState();
 }
@@ -29,7 +31,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trip Preferences'),
+        title: const Text('Trip Preferences'),
       ),
       body: Stepper(
         type: StepperType.vertical,
@@ -65,7 +67,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
         },
         steps: [
           Step(
-            title: Text('Destination Place'),
+            title: const Text('Destination Place'),
             content: _buildTextField(
               label: 'Destination Country',
               hint: 'Enter your destination place',
@@ -77,7 +79,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Budget'),
+            title: const Text('Budget'),
             content: _buildTextField(
               label: 'Budget',
               hint: 'Enter your budget',
@@ -89,7 +91,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Travel Style'),
+            title: const Text('Travel Style'),
             content: _buildDropdownField(
               label: 'Travel Style',
               value: travelStyle,
@@ -102,7 +104,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Interests'),
+            title: const Text('Interests'),
             content: _buildCheckboxList(
               label: 'Interests',
               values: interests,
@@ -119,7 +121,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Accommodation Type'),
+            title: const Text('Accommodation Type'),
             content: _buildDropdownField(
               label: 'Accommodation Type',
               value: accommodationType,
@@ -132,7 +134,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Transportation Type'),
+            title: const Text('Transportation Type'),
             content: _buildDropdownField(
               label: 'Transportation Type',
               value: transportationType,
@@ -145,7 +147,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Activity Type'),
+            title: const Text('Activity Type'),
             content: _buildDropdownField(
               label: 'Activity Type',
               value: activityType,
@@ -158,7 +160,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Cuisine Type'),
+            title: const Text('Cuisine Type'),
             content: _buildDropdownField(
               label: 'Cuisine Type',
               value: cuisineType,
@@ -171,7 +173,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
             ),
           ),
           Step(
-            title: Text('Trip Duration'),
+            title: const Text('Trip Duration'),
             content: _buildTextField(
               label: 'Trip Duration',
               hint: "Enter your trip duration",
@@ -199,7 +201,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
       onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       items: items?.map((item) {
         return DropdownMenuItem<String>(
@@ -219,7 +221,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       onChanged: onChanged,
     );
@@ -234,8 +236,8 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-        SizedBox(height: 5.0),
+        Text(label, style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 5.0),
         Wrap(
           spacing: 10.0,
           children: items.map((item) {
