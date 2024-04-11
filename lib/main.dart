@@ -306,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                                   backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                                 ),
-                                child: const Text('Explore'),
+                                child: Text('Explore'),
                               ),
                             ],
                           ),

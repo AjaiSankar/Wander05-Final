@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Itinerary extends StatefulWidget {
   final String destinationCountry;
@@ -14,23 +14,31 @@ class Itinerary extends StatefulWidget {
   final String tripDuration;
   // final String language;
 
-  const Itinerary({super.key, required this.destinationCountry, required this.budget, required this.travelStyle, required this.interestsNew, required this.accommodationType, required this.transportationType, required this.activityType, required this.cuisineType, required this.tripDuration});
+  const Itinerary({
+    Key? key,
+    required this.destinationCountry,
+    required this.budget,
+    required this.travelStyle,
+    required this.interestsNew,
+    required this.accommodationType,
+    required this.transportationType,
+    required this.activityType,
+    required this.cuisineType,
+    required this.tripDuration,
+  }) : super(key: key);
 
   @override
-  State<Itinerary> createState() => _ItineraryState();
+  _ItineraryState createState() => _ItineraryState();
 }
 
 class _ItineraryState extends State<Itinerary> {
-  String result='';
-  final TextEditingController _controller = TextEditingController();
-  // The OpenAI API endpoint
+  String result = '';
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
 
   // Replace 'YOUR_API_KEY' with your actual OpenAI API key
   final String apiKey = "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";
 
-  // Function to make the POST request to the OpenAI API
-  Future<void> fetchResponse(String destinationCountry, String budget, String travelStyle, List interestsNew, String accommodationType, String transportationType, String activityType,String cuisineType, String tripDuration) async {
+  Future<void> fetchResponse() async {
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
@@ -46,38 +54,39 @@ class _ItineraryState extends State<Itinerary> {
           },
           {
             "role": "user",
-            "content": "Generate a personalized travel itinerary for a trip to $destinationCountry with a budget of $budget. The traveler is interested in a $travelStyle vacation and enjoys $interestsNew. They are looking for $accommodationType accommodations and prefer $transportationType transportation. The itinerary should include $activityType activities and $cuisineType dining options. Please provide a detailed itinerary with daily recommendations for $tripDuration days, including suggested destinations, activities, and dining options.",
+            "content":
+                "Generate a personalized travel itinerary for a trip to ${widget.destinationCountry} with a budget of ${widget.budget}. The traveler is interested in a ${widget.travelStyle} vacation and enjoys ${widget.interestsNew.join(', ')}. They are looking for ${widget.accommodationType} accommodations and prefer ${widget.transportationType} transportation. The itinerary should include ${widget.activityType} activities and ${widget.cuisineType} dining options. Please provide a detailed itinerary with daily recommendations for ${widget.tripDuration} days, including suggested destinations, activities, and dining options.",
           }
         ],
       }),
     );
     if (response.statusCode == 200) {
-  setState(() {
-    result = jsonDecode(response.body)['choices'][0]['message']['content'];
-  
-  }); 
-} else {
-  // Print the response body for debugging purposes
-  print('Request failed with status: ${response.statusCode}.');
-  print('Response body: ${response.body}'); // Add this line to help debug
-  throw Exception('Failed to load response: ${response.body}');
-}
+      setState(() {
+        result = jsonDecode(response.body)['choices'][0]['message']['content'];
+      });
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to load response: ${response.body}');
+    }
   }
-    
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
         appBar: AppBar(
-          title: const Text('ITINERARY',
+        title: const Text(
+          'ITINERARY',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-            )
+          ),
           ),
         ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ElevatedButton(
                   onPressed: () {
@@ -91,9 +100,46 @@ class _ItineraryState extends State<Itinerary> {
                   style: const TextStyle(
                     fontSize: 16
                   ),),
+                onPressed: fetchResponse,
+                child: const Text('Generate Itinerary'),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Itinerary:',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: result.isEmpty
+                    ? Text(
+                        'No itinerary generated yet',
+                  style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                      )
+                    : Text(
+                        result,
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+              ),
               ],
             ),
           ),
-        ));
+      ),
+    );
   }
 }
