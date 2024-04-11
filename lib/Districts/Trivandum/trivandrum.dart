@@ -481,7 +481,7 @@ class TrivandrumPage extends StatelessWidget {
       Navigator.pushNamed(context, '/explore');
       break;
     case 2:
-      Navigator.pushNamed(context, '/hotels');
+      Navigator. pushNamed(context, '/hotels');
       break;
     default:
       break;

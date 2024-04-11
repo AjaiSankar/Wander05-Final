@@ -12,6 +12,7 @@ class Itinerary extends StatefulWidget {
   final String activityType;
   final String cuisineType;
   final String tripDuration;
+  // final String language;
 
   const Itinerary({
     Key? key,
@@ -33,7 +34,9 @@ class Itinerary extends StatefulWidget {
 class _ItineraryState extends State<Itinerary> {
   String result = '';
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "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";
+
+  // Replace 'YOUR_API_KEY' with your actual OpenAI API key
+  final String apiKey = "API Key Here";
 
   Future<void> fetchResponse() async {
     final response = await http.post(
@@ -70,22 +73,22 @@ class _ItineraryState extends State<Itinerary> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return  Scaffold(
+        appBar: AppBar(
         title: const Text(
           'ITINERARY',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+          ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ElevatedButton(
+              children: [
+                ElevatedButton(
                 onPressed: fetchResponse,
                 child: const Text('Generate Itinerary'),
               ),
@@ -110,7 +113,7 @@ class _ItineraryState extends State<Itinerary> {
                 child: result.isEmpty
                     ? Text(
                         'No itinerary generated yet',
-                        style: TextStyle(
+                  style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
                       )
@@ -122,9 +125,9 @@ class _ItineraryState extends State<Itinerary> {
                         ),
                       ),
               ),
-            ],
+              ],
+            ),
           ),
-        ),
       ),
     );
   }
