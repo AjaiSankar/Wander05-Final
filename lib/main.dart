@@ -8,8 +8,13 @@ import 'package:wander05_final/it.dart';
 import 'package:wander05_final/landing.dart';
 import 'package:wander05_final/login.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+
+  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,10 +26,11 @@ class MyApp extends StatelessWidget {
       title: 'Wander05',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        
       ),
-      home: LoginPage(),
+      home: const LoginPage(),
       routes: {
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
         '/home':(context) => const HomePage(),
       }

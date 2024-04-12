@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wander05_final/auth.dart';
 import 'package:wander05_final/signup.dart';
 
+
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -26,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
-        backgroundColor: Colors.teal[200],
+        backgroundColor: Colors.teal[2],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -85,25 +86,18 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: () {
                     Auth authHandler = Auth();
                     // Validate the form before proceeding with login
                     if (_formKey.currentState!.validate()) {
-                      try {
-                        await authHandler.handleSignInEmail(_emailController.text, _passwordController.text);
-                        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-                      } catch (e) {
-                        // Handle Firebase exceptions here
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Login failed. Please check your credentials.'),
-                          ),
-                        );
-                      }
+                      authHandler.handleSignInEmail(_emailController.text, _passwordController.text)
+                      .then((user) {
+                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                      }).catchError((e) => print(e));
                     }
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.teal),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
                   ),
                   child: const Text('Login'),
                 ),
@@ -121,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                           context,
                           MaterialPageRoute(builder: (context) => const SignupPage()),
                         );
+                        print('Navigate to registration screen');
                       },
                       child: const Text(
                         'Sign up',
@@ -136,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                 InkWell(
                   onTap: () {
                     // Implement navigation to the forgot password screen
+                    print('Navigate to forgot password screen');
                   },
                   child: const Text(
                     'Forgot Password?',
