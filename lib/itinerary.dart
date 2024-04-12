@@ -38,7 +38,7 @@ class _ItineraryState extends State<Itinerary> {
   // Replace 'YOUR_API_KEY' with your actual OpenAI API key
   final String apiKey = "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";
 
-  Future<void> fetchResponse() async {
+  Future<void> fetchResponse(String destinationCountry, String budget, String travelStyle, List interestsNew, String accommodationType, String transportationType, String activityType, String cuisineType, String tripDuration) async {
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
@@ -90,9 +90,10 @@ class _ItineraryState extends State<Itinerary> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                   fetchResponse(
-                    widget.destinationCountry,widget.budget , widget.travelStyle,widget.interestsNew, widget.accommodationType, widget.transportationType,widget.activityType,widget.cuisineType, widget.tripDuration
-                   ) ;},
+                    fetchResponse(
+                      widget.destinationCountry,widget.budget , widget.travelStyle,widget.interestsNew, widget.accommodationType, widget.transportationType,widget.activityType,widget.cuisineType, widget.tripDuration
+                    );
+                  },
                   child: const Text('Send'),
                 ),
                 Text(result,
@@ -100,42 +101,6 @@ class _ItineraryState extends State<Itinerary> {
                   style: const TextStyle(
                     fontSize: 16
                   ),),
-                onPressed: fetchResponse,
-                child: const Text('Generate Itinerary'),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Itinerary:',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: result.isEmpty
-                    ? Text(
-                        'No itinerary generated yet',
-                  style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                        ),
-                      )
-                    : Text(
-                        result,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-              ),
               ],
             ),
           ),
