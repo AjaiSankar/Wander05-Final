@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ExploreTrivandrumPage extends StatelessWidget {
+  const ExploreTrivandrumPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Explore Trivandrum'),
+        title: const Text('Explore Trivandrum'),
       ),
       body: ListView.builder(
         itemCount: spots.length,
@@ -18,11 +20,11 @@ class ExploreTrivandrumPage extends StatelessWidget {
 
   Widget _buildSpotCard(BuildContext context, Spot spot) {
     return Card(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       child: ListTile(
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
-          child: Container(
+          child: SizedBox(
             width: 120.0,
             height: 160.0, // Adjust the height as needed
             child: Image.asset(
@@ -33,12 +35,12 @@ class ExploreTrivandrumPage extends StatelessWidget {
         ),
         title: Text(
           spot.name,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
                 Icon(Icons.star, color: Colors.yellow),
                 Icon(Icons.star, color: Colors.yellow),
@@ -49,12 +51,12 @@ class ExploreTrivandrumPage extends StatelessWidget {
                 Text('4.5 (500 reviews)'),
               ],
             ),
-            SizedBox(height: 8.0),
-            Text(
+            const SizedBox(height: 8.0),
+            const Text(
               'Top Reviews:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 4.0),
+            const SizedBox(height: 4.0),
             Text('1. ${spot.reviews[0]}'),
             Text('2. ${spot.reviews[1]}'),
           ],
@@ -160,7 +162,7 @@ List<Spot> spots = [
 ];
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: ExploreTrivandrumPage(),
   ));
 }

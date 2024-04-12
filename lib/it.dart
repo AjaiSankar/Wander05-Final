@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wander05_final/itinerary.dart';
 
 class TripPreferencesPage extends StatefulWidget {
+  const TripPreferencesPage({super.key});
+
   @override
   _TripPreferencesPageState createState() => _TripPreferencesPageState();
 }
@@ -30,7 +32,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trip Preferences'),
+        title: const Text('Trip Preferences'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -234,7 +236,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
       onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       items: items?.map((item) {
         return DropdownMenuItem<String>(
@@ -272,8 +274,8 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-        SizedBox(height: 5.0),
+        Text(label, style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 5.0),
         Wrap(
           spacing: 10.0,
           children: items.map((item) {

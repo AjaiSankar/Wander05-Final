@@ -1,8 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
-import 'package:wander05_final/Districts/Trivandum/tvmexplore.dart';
+import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
 import 'package:wander05_final/landing.dart';
 import 'package:wander05_final/login.dart';
@@ -12,6 +13,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,14 +24,17 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginPage(),
       routes: {
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
+        '/home':(context) => const HomePage(),
       }
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -217,16 +223,16 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                     onPressed: () {
                       // Handle button press
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const TripPreferencesPage()));
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                       minimumSize: MaterialStateProperty.all<Size>(const Size(30, 60)),
                     ),
-                    child: Container(
+                    child: const SizedBox(
                       height: 60, // Increase button height
-                      child: const Center(
+                      child: Center(
                         child: Text(
                           'Plan my Trip',
                           style: TextStyle(
@@ -311,12 +317,12 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: ConvexAppBar(
         backgroundColor: const Color.fromARGB(255, 12, 84, 193),
-        items: [
-          const TabItem(icon: Icons.home, title: 'Home'),
-          const TabItem(icon: Icons.map, title: 'My Trips'),
-          const TabItem(icon: Icons.add, title: 'New Trip'),
-          const TabItem(icon: Icons.hotel, title: 'Bookings'),
-          const TabItem(icon: Icons.people, title: 'Profile'),
+        items: const [
+          TabItem(icon: Icons.home, title: 'Home'),
+          TabItem(icon: Icons.map, title: 'My Trips'),
+          TabItem(icon: Icons.add, title: 'New Trip'),
+          TabItem(icon: Icons.hotel, title: 'Bookings'),
+          TabItem(icon: Icons.people, title: 'Profile'),
         ],
         onTap: (int i) => print('click index=$i'),
       ),
