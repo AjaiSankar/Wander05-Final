@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wander05_final/login.dart';
 
 class LandingPage extends StatefulWidget {
+  const LandingPage({super.key});
+
   @override
   _LandingPageState createState() => _LandingPageState();
 }
@@ -12,7 +15,7 @@ class _LandingPageState extends State<LandingPage> {
   late String _currentQuote;
   int _quoteIndex = 0;
 
-  List<String> _quotes = [
+  final List<String> _quotes = [
     "",
     "",
     // Add more quotes as needed
@@ -75,33 +78,36 @@ class _LandingPageState extends State<LandingPage> {
             left: 0,
             right: 0,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
               color: Colors.black.withOpacity(0.3),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AnimatedOpacity(
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     opacity: 1.0,
                     child: Text(
                       _currentQuote,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 30.0,
                       ),
                     ),
                   ),
-                  SizedBox(height: 20), // Add space between text and button
+                  const SizedBox(height: 20), // Add space between text and button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle button press if needed
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      minimumSize: Size(double.infinity, 0), // full width
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      minimumSize: const Size(double.infinity, 0), // full width
                     ),
-                    child: Text(
+                    child: const Text(
                       'GET STARTED',
                       style: TextStyle(fontSize: 20.0),
                     ),

@@ -1,134 +1,151 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:wander05_final/auth.dart';
+import 'package:wander05_final/signup.dart';
 
-class LoginPage extends StatelessWidget {
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black,),
-        ),
+        title: const Text('Login'),
+        backgroundColor: Colors.teal[2],
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      FadeInUp(duration: Duration(milliseconds: 1000), child: Text("Login", style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold
-                      ),)),
-                      SizedBox(height: 20,),
-                      FadeInUp(duration: Duration(milliseconds: 1200), child: Text("Login to your account", style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700]
-                      ),)),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: <Widget>[
-                        FadeInUp(duration: Duration(milliseconds: 1200), child: makeInput(label: "Email")),
-                        FadeInUp(duration: Duration(milliseconds: 1300), child: makeInput(label: "Password", obscureText: true)),
-                      ],
-                    ),
-                  ),
-                  FadeInUp(duration: Duration(milliseconds: 1400), child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 3, left: 3),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.black),
-                          top: BorderSide(color: Colors.black),
-                          left: BorderSide(color: Colors.black),
-                          right: BorderSide(color: Colors.black),
-                        )
-                      ),
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        height: 60,
-                        onPressed: () {},
-                        color: Colors.greenAccent,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)
-                        ),
-                        child: Text("Login", style: TextStyle(
-                          fontWeight: FontWeight.w600, 
-                          fontSize: 18
-                        ),),
-                      ),
-                    ),
-                  )),
-                  FadeInUp(duration: Duration(milliseconds: 1500), child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Don't have an account?"),
-                      Text("Sign up", style: TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 18
-                      ),),
-                    ],
-                  ))
-                ],
-              ),
-            ),
-            FadeInUp(duration: Duration(milliseconds: 1200), child: Container(
-              height: MediaQuery.of(context).size.height / 3,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/background.png'),
-                  fit: BoxFit.cover
-                )
-              ),
-            ))
-          ],
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.teal, Colors.white],
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget makeInput({label, obscureText = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
-        SizedBox(height: 5,),
-        TextField(
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade400)
-            ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade400)
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Your logo image
+                Image.asset(
+                  'images/logo1.png', // Replace with the path to your logo image
+                  width: 120.0, // Adjust the width as needed
+                  height: 120.0, // Adjust the height as needed
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    icon: Icon(Icons.email, color: Colors.white),
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    // Add email validation if needed
+                    if (value!.isEmpty || !value.contains('@')) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    icon: Icon(Icons.lock, color: Colors.white),
+                    labelStyle: TextStyle(color: Colors.white),
+                    suffixIcon: Icon(Icons.visibility),
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a password';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Auth authHandler = Auth();
+                    // Validate the form before proceeding with login
+                    if (_formKey.currentState!.validate()) {
+                      authHandler.handleSignInEmail(_emailController.text, _passwordController.text)
+                      .then((user) {
+                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                      }).catchError((e) => print(e));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                  ),
+                  child: const Text('Login'),
+                ),
+                const SizedBox(height: 8.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Don't have an account? ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SignupPage()),
+                        );
+                        print('Navigate to registration screen');
+                      },
+                      child: const Text(
+                        'Sign up',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                InkWell(
+                  onTap: () {
+                    // Implement navigation to the forgot password screen
+                    print('Navigate to forgot password screen');
+                  },
+                  child: const Text(
+                    'Forgot Password?',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        SizedBox(height: 30,),
-      ],
+      ),
     );
   }
 }

@@ -1,16 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
-import 'package:wander05_final/Districts/Trivandum/tvmexplore.dart';
+import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
 import 'package:wander05_final/landing.dart';
+import 'package:wander05_final/login.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+
+  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,12 +27,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: const LandingPage(),
+      routes: {
+        '/login': (context) => const LoginPage(),
+        //'/itinerary': (context) => const Itinerary(),
+        '/home':(context) => const HomePage(),
+      }
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -94,7 +110,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Wander05',
           style: TextStyle(
             color: Colors.white, // Set text color
@@ -105,7 +121,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 4, // Add elevation (shadow)
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white), // Set icon color
+            icon: const Icon(Icons.search, color: Colors.white), // Set icon color
             onPressed: () {
               showSearch(
                 context: context,
@@ -116,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(8), // Add padding to the whole body
+        padding: const EdgeInsets.all(8), // Add padding to the whole body
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -129,12 +145,12 @@ class _HomePageState extends State<HomePage> {
                 aspectRatio: 16 / 9,
                 autoPlayCurve: Curves.fastOutSlowIn,
                 enableInfiniteScroll: true,
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
                 viewportFraction: 0.8,
               ),
               itemBuilder: (BuildContext context, int index, int realIndex) {
                 return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     image: DecorationImage(
@@ -147,19 +163,19 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(8.0), // Add padding to the text
                       child: Text(
                         featureTexts[index],
-                        style: TextStyle(fontSize: 25.0, color: Colors.white),
+                        style: const TextStyle(fontSize: 25.0, color: Colors.white),
                       ),
                     ),
                   ),
                 );
               },
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Hi user, where do you want to go?',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
            GestureDetector(
   child: TextField(
     onTap: () {
@@ -168,7 +184,7 @@ class _HomePageState extends State<HomePage> {
       delegate: DistrictSearch(filteredDistricts, filterDistricts),
     );
   },
-    decoration: InputDecoration(
+    decoration: const InputDecoration(
       prefixIcon: Icon(Icons.search),
       hintText: 'Search places',
       border: OutlineInputBorder(),
@@ -176,10 +192,10 @@ class _HomePageState extends State<HomePage> {
   ),
 ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               width: double.infinity, // Take full width of the screen
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('images/main6.jpg'),
                   fit: BoxFit.cover, // Cover the full container area
@@ -189,8 +205,8 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0), // Add padding to the text
+                  const Padding(
+                    padding: EdgeInsets.all(16.0), // Add padding to the text
                     child: Text(
                       'Plan your next trip', // Removed the "with zero effort" part for simplicity
                       style: TextStyle(
@@ -200,25 +216,26 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20), // Add spacing between text and button
-                  Text(
+                  const SizedBox(height: 20), // Add spacing between text and button
+                  const Text(
                     'With our easy-to-use app planning your\n next adventure is a breeze!',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 40), // Increase spacing between text and button
+                  const SizedBox(height: 40), // Increase spacing between text and button
                   ElevatedButton(
                     onPressed: () {
                       // Handle button press
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const TripPreferencesPage()));
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 12, 84, 193)),
+                      backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      minimumSize: MaterialStateProperty.all<Size>(Size(30, 60)),
+                      minimumSize: MaterialStateProperty.all<Size>(const Size(30, 60)),
                     ),
-                    child: Container(
+                    child: const SizedBox(
                       height: 60, // Increase button height
                       child: Center(
                         child: Text(
@@ -233,15 +250,15 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SizedBox(height: 40),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0), // Add padding to the left of the text
+            const SizedBox(height: 40),
+            const Padding(
+              padding: EdgeInsets.only(left: 16.0), // Add padding to the left of the text
               child: Text(
                 'Weekend trips near you',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             CarouselSlider.builder(
               itemCount: weekendTrips.length,
               options: CarouselOptions(
@@ -251,14 +268,14 @@ class _HomePageState extends State<HomePage> {
                 aspectRatio: 16 / 9,
                 autoPlayCurve: Curves.fastOutSlowIn,
                 enableInfiniteScroll: true,
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
                 viewportFraction: 0.8,
               ),
               itemBuilder: (BuildContext context, int index, int realIndex) {
                 return Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.0),
                         image: DecorationImage(
@@ -271,16 +288,16 @@ class _HomePageState extends State<HomePage> {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text(
                                 weekendTrips[index]['name'],
-                                style: TextStyle(fontSize: 20, color: Colors.white),
+                                style: const TextStyle(fontSize: 20, color: Colors.white),
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               ElevatedButton(
                                 onPressed: () {
                                   // Handle button press
@@ -304,8 +321,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Color.fromARGB(255, 12, 84, 193),
-        items: [
+        backgroundColor: const Color.fromARGB(255, 12, 84, 193),
+        items: const [
           TabItem(icon: Icons.home, title: 'Home'),
           TabItem(icon: Icons.map, title: 'My Trips'),
           TabItem(icon: Icons.add, title: 'New Trip'),
@@ -328,7 +345,7 @@ class DistrictSearch extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
           onFilter('');
@@ -340,7 +357,7 @@ class DistrictSearch extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, '');
       },
@@ -378,7 +395,7 @@ class DistrictSearch extends SearchDelegate<String> {
                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return child;
                 },
-                transitionDuration: Duration(milliseconds: 500), // Adjust the duration as needed
+                transitionDuration: const Duration(milliseconds: 500), // Adjust the duration as needed
               ),
             );
           },
