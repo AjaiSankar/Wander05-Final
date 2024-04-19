@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
+import 'package:wander05_final/UserProfilePage.dart';
 import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
 import 'package:wander05_final/landing.dart';
@@ -331,17 +332,30 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: const Color.fromARGB(255, 12, 84, 193),
-        items: const [
-          TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.map, title: 'My Trips'),
-          TabItem(icon: Icons.add, title: 'New Trip'),
-          TabItem(icon: Icons.hotel, title: 'Bookings'),
-          TabItem(icon: Icons.people, title: 'Profile'),
-        ],
-        onTap: (int i) => print('click index=$i'),
-      ),
+  bottomNavigationBar: ConvexAppBar(
+  backgroundColor: const Color.fromARGB(255, 12, 84, 193),
+  items: const [
+    TabItem(icon: Icons.home, title: 'Home'),
+    TabItem(icon: Icons.map, title: 'My Trips'),
+    TabItem(icon: Icons.add, title: 'New Trip'),
+    TabItem(icon: Icons.hotel, title: 'Disasters'),
+    TabItem(icon: Icons.people, title: 'Profile'),
+  ],
+  onTap: (int index) {
+    if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DisasterPage()),
+      );
+    } else if (index == 4) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UserProfilePage()),
+      );
+    }
+  },
+),
+
     );
   }
 }

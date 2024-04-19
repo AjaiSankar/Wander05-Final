@@ -3,10 +3,6 @@ import 'package:wander05_final/auth.dart';
 
 import 'signup.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
