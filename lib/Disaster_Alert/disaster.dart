@@ -1,172 +1,222 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-
-class DisasterPage extends StatefulWidget {
+class DisasterReportPage extends StatefulWidget {
   @override
-  _DisasterPageState createState() => _DisasterPageState();
+  _DisasterReportPageState createState() => _DisasterReportPageState();
 }
 
-class _DisasterPageState extends State<DisasterPage> {
+class _DisasterReportPageState extends State<DisasterReportPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String selectedDistrict = "Kottayam";
-  String selectedDisasterType = "Flood";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String selectedDistrict = 'Kottayam';
+  String selectedDisasterType = 'Flood'; // Default selected disaster type
+  TextEditingController severityController = TextEditingController();
+
+  List<String> districts = [
+    'Alappuzha',
+    'Ernakulam',
+    'Idukki',
+    'Kannur',
+    'Kasaragod',
+    'Kollam',
+    'Kottayam',
+    'Kozhikode',
+    'Malappuram',
+    'Palakkad',
+    'Pathanamthitta',
+    'Thiruvananthapuram',
+    'Thrissur',
+    'Wayanad'
+  ];
+
+  List<String> disasterTypes = ['Flood', 'Earthquake', 'Landslide'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Disaster Alert'),
+        title: Text('Disaster Report'),
       ),
-      body: StreamBuilder(
-        stream: _firestore.collectionGroup('disaster_reports').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot alert = snapshot.data!.docs[index];
-              // Check if fields exist and parse values
-              int floodCount = alert['flood'] != null ? int.tryParse(alert['flood']) ?? 0 : 0;
-              int earthquakeCount = alert['earthquake'] != null ? int.tryParse(alert['earthquake']) ?? 0 : 0;
-              int landslideCount = alert['landslide'] != null ? int.tryParse(alert['landslide']) ?? 0 : 0;
-
-              // Check if any disaster count is more than 5
-              bool showDisaster = false;
-              if (floodCount > 5 || earthquakeCount > 5 || landslideCount > 5) {
-                showDisaster = true;
-              }
-              return showDisaster
-                  ? _buildDisasterCard(alert)
-                  : SizedBox.shrink();
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _reportDisaster,
-        tooltip: 'Report Disaster',
-        child: Icon(Icons.add),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: selectedDistrict,
+                onChanged: (value) {
+                  setState(() {
+                    selectedDistrict = value!;
+                  });
+                },
+                items: districts.map((district) {
+                  return DropdownMenuItem(
+                    child: Text(district),
+                    value: district,
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Select District',
+                ),
+              ),
+              SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: selectedDisasterType,
+                onChanged: (value) {
+                  setState(() {
+                    selectedDisasterType = value!;
+                  });
+                },
+                items: disasterTypes.map((type) {
+                  return DropdownMenuItem(
+                    child: Text(type),
+                    value: type,
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Select Disaster Type',
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: severityController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Severity',
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  reportDisaster();
+                },
+                child: Text('Report Disaster'),
+              ),
+              SizedBox(height: 20),
+              StreamBuilder<QuerySnapshot>(
+                stream: _firestore
+                    .collection('disaster_reports')
+                    .doc(selectedDistrict)
+                    .collection(selectedDisasterType.toLowerCase())
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  final reports = snapshot.data!.docs;
+                  List<Widget> disasterList = [];
+                  for (var report in reports) {
+                    final reportData =
+                        report.data() as Map<String, dynamic>;
+                    disasterList.add(
+                      Card(
+                        child: ListTile(
+                          title: Text('Reported by: ${reportData['userEmail']}'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Reported at: ${reportData['timestamp']}'),
+                              Text('Severity: ${reportData['severity']}'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: disasterList,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildDisasterCard(DocumentSnapshot alert) {
-    return Card(
-      margin: EdgeInsets.all(8.0),
-      child: ListTile(
-        title: Text('Disaster Alert'),
-        subtitle: Text('${alert.id}'),
-      ),
-    );
-  }
+  void reportDisaster() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final severity = int.tryParse(severityController.text) ?? 0;
+      if (severity > 0) {
+        final userReportRef = _firestore
+            .collection('user_reports')
+            .doc(user.uid)
+            .collection('reports')
+            .doc(selectedDistrict);
 
-  void _reportDisaster() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Report Disaster'),
-          content: Container(
-            height: 200.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DropdownButtonFormField<String>(
-                  value: selectedDistrict,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedDistrict = value!;
-                    });
+        final userReportDoc = await userReportRef.get();
+        if (!userReportDoc.exists) {
+          await _firestore
+              .collection('disaster_reports')
+              .doc(selectedDistrict)
+              .collection(selectedDisasterType.toLowerCase())
+              .doc(user.uid) // Use user's UID as document ID to ensure one report per user per district
+              .set({
+            'timestamp': DateTime.now().toString(),
+            'severity': severity,
+            'userEmail': user.email,
+          });
+
+          await userReportRef.set({'reported': true});
+
+          severityController.clear();
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Already Reported'),
+              content: Text('You have already reported a disaster for this district.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
-                  items: <String>[
-                    'Thiruvananthapuram',
-                    'Kollam',
-                    'Pathanamthitta',
-                    'Alappuzha',
-                    'Kottayam',
-                    'Idukki',
-                    'Ernakulam',
-                    'Thrissur',
-                    'Palakkad',
-                    'Malappuram',
-                    'Kozhikode',
-                    'Wayanad',
-                    'Kannur',
-                    'Kasaragod',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                  child: Text('OK'),
                 ),
-                DropdownButtonFormField<String>(
-                  value: selectedDisasterType,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedDisasterType = value!;
-                    });
-                  },
-                  items: <String>[
-                    'Select Disaster Type',
-                    'Flood',
-                    'Earthquake',
-                    'Landslide',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                // Add optional picture upload option here
               ],
             ),
+          );
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Invalid Severity'),
+            content: Text('Please enter a valid severity value.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
           ),
-          actions: <Widget>[
+        );
+      }
+    } else {
+      // User is not authenticated
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Authentication Required'),
+          content: Text('You need to sign in to report a disaster.'),
+          actions: [
             TextButton(
-              child: Text('Report'),
               onPressed: () {
-                // Handle disaster reporting
-                _reportToFirestore(selectedDistrict, selectedDisasterType);
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-            ),
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              child: Text('OK'),
             ),
           ],
-        );
-      },
-    );
-  }
-
-  void _reportToFirestore(String district, String disasterType) async {
-    try {
-      await _firestore
-          .collection('disaster_reports')
-          .doc(district)
-          .update({disasterType: FieldValue.increment(1)});
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Disaster reported successfully!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-          duration: Duration(seconds: 2),
         ),
       );
     }

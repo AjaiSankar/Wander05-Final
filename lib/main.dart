@@ -185,10 +185,10 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Hi user, where do you want to go?',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+             Text(
+                'Hi ${_auth.currentUser?.email ?? 'unknown'}, where do you want to go?',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             const SizedBox(height: 20),
             GestureDetector(
               child: TextField(
@@ -345,7 +345,7 @@ class _HomePageState extends State<HomePage> {
     if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => DisasterPage()),
+        MaterialPageRoute(builder: (context) => DisasterReportPage()),
       );
     } else if (index == 4) {
       Navigator.push(
