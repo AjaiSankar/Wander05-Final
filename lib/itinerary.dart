@@ -4,6 +4,7 @@ import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class Itinerary extends StatefulWidget {
   final String startplace;
@@ -40,7 +41,7 @@ class _ItineraryState extends State<Itinerary> {
   String _typingText = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "api key put";
+  final String apiKey = "sk-proj-siwnVsyyNVwk9lktxcsqT3BlbkFJEOqjv5t5sdT7fdbGtr0z";
 
   Future<void> fetchResponse(
     String startplace,
@@ -184,6 +185,17 @@ Widget build(BuildContext context) {
         ),
       ],
     ),
+    bottomNavigationBar: ConvexAppBar(
+        backgroundColor: const Color.fromARGB(255, 12, 84, 193),
+        items: [
+          const TabItem(icon: Icons.home, title: 'Home'),
+          const TabItem(icon: Icons.map, title: 'My Trips'),
+          const TabItem(icon: Icons.add, title: 'New Trip'),
+          const TabItem(icon: Icons.hotel, title: 'Bookings'),
+          const TabItem(icon: Icons.people, title: 'Profile'),
+        ],
+        onTap: (int i) => print('click index=$i'),
+      ),
     
   );
 }

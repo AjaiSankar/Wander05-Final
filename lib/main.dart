@@ -1,19 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
-import 'package:wander05_final/UserProfilePage.dart';
+import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
-import 'package:wander05_final/itinerary.dart';
 import 'package:wander05_final/landing.dart';
 import 'package:wander05_final/login.dart';
+import 'package:wander05_final/Disaster_Alert/disaster.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,64 +28,52 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
-
+      home: LoginPage(),
       routes: {
         '/login': (context) => LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
-      }
+        '/home': (context) => const HomePage(),
+      },
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final List<String> images = [
-    'images/main1.jpg',
+    'images/f.jpg',
     'images/main2.jpg',
     'images/main3.jpg',
   ];
 
   final List<String> featureTexts = [
-    '',
-    '',
-    '',
+    'Feature 1: Discover new places',
+    'Feature 2: Plan your trips',
+    'Feature 3: Share experiences',
   ];
 
   final List<Map<String, dynamic>> weekendTrips = [
     {
-      'image': 'images/wkt1.jpg',
-      'name': '',
+      'image': 'images/f.jpg',
+      'name': 'Trip 1',
     },
     {
-      'image': 'images/wkt2.jpg',
-      'name': '',
+      'image': 'images/main2.jpg',
+      'name': 'Trip 2',
     },
     {
-      'image': 'images/wkt3.jpg',
-      'name': '',
+      'image': 'images/main3.jpg',
+      'name': 'Trip 3',
     },
   ];
-
-  final List<Map<String, dynamic>> beaches = [
-    {
-      'image': 'images/beach1.jpg',
-      'name': '',
-    },
-    {
-      'image': 'images/beach2.jpg',
-      'name': '',
-    },
-    {
-      'image': 'images/beach3.jpg',
-      'name': '',
-    },
-  ];
-
 
   List<String> districts = [
     'Thiruvananthapuram',
@@ -114,6 +109,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // Function to handle logout
+  Future<void> _signOut() async {
+    await _auth.signOut();
+    Navigator.of(context).pushReplacementNamed('/login'); // Navigate to login page after logout
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,15 +122,15 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           'Wander05',
           style: TextStyle(
-            color: Colors.white, // Set text color
-            fontSize: 20, // Set text size
+            color: Colors.white,
+            fontSize: 20,
           ),
         ),
-        backgroundColor: Colors.blue[900], // Set background color
-        elevation: 4, // Add elevation (shadow)
+        backgroundColor: Colors.blue[900],
+        elevation: 4,
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.white), // Set icon color
+            icon: const Icon(Icons.search, color: Colors.white),
             onPressed: () {
               showSearch(
                 context: context,
@@ -137,10 +138,14 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: _signOut,
+          ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(8), // Add padding to the whole body
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -168,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0), // Add padding to the text
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(
                         featureTexts[index],
                         style: const TextStyle(fontSize: 25.0, color: Colors.white),
@@ -184,96 +189,86 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-           GestureDetector(
-  child: TextField(
-    onTap: () {
-    showSearch(
-      context: context,
-      delegate: DistrictSearch(filteredDistricts, filterDistricts),
-    );
-  },
-    decoration: const InputDecoration(
-      prefixIcon: Icon(Icons.search),
-      hintText: 'Search places',
-      border: OutlineInputBorder(),
-    ),
-  ),
-),
-
-            const SizedBox(height: 20),
-           Padding(
-  padding: const EdgeInsets.all(20.0), // Add padding to the container
-  child: Container(
-    width: double.infinity, // Take full width of the screen
-    decoration: const BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('images/main6.jpg'),
-        fit: BoxFit.cover, // Cover the full container area
-      ),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(16.0), // Add padding to the text
-          child: Text(
-            '', // Removed the "with zero effort" part for simplicity
-            style: TextStyle(
-              fontSize: 32, // Increased font size for a stronger emphasis
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        const SizedBox(height: 20), // Add spacing between text and button
-        const Text(
-          '',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 40), // Increase spacing between text and button
-        Center(
-          child: ElevatedButton(
-            onPressed: () {
-              // Handle button press
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            ),
-            child: Container(
-              height: 30, // Maintain button height
-              width: 150, // Decrease button width
-              child: Center(
-                child: Text(
-                  'Plan my Trip',
-                  style: TextStyle(
-                    fontSize: 20, // Maintain button text size
-                  ),
+            GestureDetector(
+              child: TextField(
+                onTap: () {
+                  showSearch(
+                    context: context,
+                    delegate: DistrictSearch(filteredDistricts, filterDistricts),
+                  );
+                },
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search places',
+                  border: OutlineInputBorder(),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-
-
+            const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/main6.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Plan your next trip',
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'With our easy-to-use app planning your\n next adventure is a breeze!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      minimumSize: MaterialStateProperty.all<Size>(const Size(30, 60)),
+                    ),
+                    child: const SizedBox(
+                      height: 60,
+                      child: Center(
+                        child: Text(
+                          'Plan my Trip',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 40),
             const Padding(
-              padding: EdgeInsets.only(left: 16.0), // Add padding to the left of the text
+              padding: EdgeInsets.only(left: 16.0),
               child: Text(
                 'Weekend trips near you',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            
             const SizedBox(height: 20),
             CarouselSlider.builder(
               itemCount: weekendTrips.length,
@@ -322,79 +317,7 @@ class _HomePageState extends State<HomePage> {
                                   backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                                 ),
-                                child: const Text('Explore'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-
-
-
-            //Beaches
-            const SizedBox(height: 40),
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0), // Add padding to the left of the text
-              child: Text(
-                'Beaches to catch some sun!',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-
-            const SizedBox(height: 40),
-            CarouselSlider.builder(
-              itemCount: beaches.length,
-              options: CarouselOptions(
-                height: 200.0,
-                enlargeCenterPage: true,
-                autoPlay: true,
-                aspectRatio: 16 / 9,
-                autoPlayCurve: Curves.fastOutSlowIn,
-                enableInfiniteScroll: true,
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                viewportFraction: 0.8,
-              ),
-              itemBuilder: (BuildContext context, int index, int realIndex) {
-                return Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        image: DecorationImage(
-                          image: AssetImage(beaches[index]['image']),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                beaches[index]['name'],
-                                style: const TextStyle(fontSize: 20, color: Colors.white),
-                              ),
-                              const SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Handle button press
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                                ),
-                                child: const Text('Explore'),
+                                child: Text('Explore'),
                               ),
                             ],
                           ),
@@ -406,20 +329,16 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ],
-          
         ),
-        
       ),
-
-      
       bottomNavigationBar: ConvexAppBar(
         backgroundColor: const Color.fromARGB(255, 12, 84, 193),
-        items: [
-          const TabItem(icon: Icons.home, title: 'Home'),
-          const TabItem(icon: Icons.map, title: 'My Trips'),
-          const TabItem(icon: Icons.add, title: 'New Trip'),
-          const TabItem(icon: Icons.hotel, title: 'Bookings'),
-          const TabItem(icon: Icons.people, title: 'Profile'),
+        items: const [
+          TabItem(icon: Icons.home, title: 'Home'),
+          TabItem(icon: Icons.map, title: 'My Trips'),
+          TabItem(icon: Icons.add, title: 'New Trip'),
+          TabItem(icon: Icons.hotel, title: 'Bookings'),
+          TabItem(icon: Icons.people, title: 'Profile'),
         ],
         onTap: (int i) => print('click index=$i'),
       ),
@@ -474,7 +393,6 @@ class DistrictSearch extends SearchDelegate<String> {
       itemBuilder: (context, index) {
         return ListTile(
           onTap: () {
-            // Navigate to the respective district page with a fade transition
             Navigator.push(
               context,
               PageRouteBuilder(
@@ -487,7 +405,7 @@ class DistrictSearch extends SearchDelegate<String> {
                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return child;
                 },
-                transitionDuration: const Duration(milliseconds: 500), // Adjust the duration as needed
+                transitionDuration: const Duration(milliseconds: 500),
               ),
             );
           },
@@ -498,17 +416,13 @@ class DistrictSearch extends SearchDelegate<String> {
   }
 
   Widget getDistrictPage(String district) {
-    // Assuming you have created separate pages for each district
-    // You can replace these with your actual district page widgets
     switch (district) {
       case 'Thiruvananthapuram':
         return TrivandrumPage();
       case 'Kollam':
         return TrivandrumPage();
-      // Add cases for other districts
       default:
-        return Container(); // Return a default container or page if the district page is not available
+        return Container();
     }
   }
 }
-
