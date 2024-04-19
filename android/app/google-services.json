@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "808143356160",
+    "project_id": "wander05",
+    "storage_bucket": "wander05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808143356160:android:50d30b52b68ac68eed73e5",
+        "android_client_info": {
+          "package_name": "com.example.wander05_final"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRDb3YrQd6zY45CCsbJ6PyiitBuE-rB6w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

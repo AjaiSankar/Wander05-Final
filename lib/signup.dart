@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'auth.dart';
+
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -84,8 +86,12 @@ class _SignupPageState extends State<SignupPage> {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
+                      Auth authHandler = new Auth();
                       // Implement your user registration logic here
-                      _signup();
+                      authHandler.handleSignUp(_emailController.text, _passwordController.text)
+                      .then((user) {
+                            Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                      }).catchError((e) => print(e));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.teal, // Set the button color to teal
