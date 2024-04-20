@@ -56,23 +56,23 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final List<String> featureTexts = [
-    'Feature 1: Discover new places',
-    'Feature 2: Plan your trips',
-    'Feature 3: Share experiences',
+    '',
+    '',
+    '',
   ];
 
   final List<Map<String, dynamic>> weekendTrips = [
     {
-      'image': 'images/f.jpg',
-      'name': 'Trip 1',
+      'image': 'images/wkt1.jpg',
+      'name': '',
     },
     {
-      'image': 'images/main2.jpg',
-      'name': 'Trip 2',
+      'image': 'images/wkt2.jpg',
+      'name': '',
     },
     {
-      'image': 'images/main3.jpg',
-      'name': 'Trip 3',
+      'image': 'images/wkt3.jpg',
+      'name': '',
     },
   ];
 
@@ -205,23 +205,23 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             Container(
               width: double.infinity,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('images/main6.jpg'),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center, // Aligns children vertically centered
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Text(
-                      'Plan your next trip',
+                      '',
                       style: TextStyle(
                         fontSize: 32,
                         color: Colors.white,
@@ -229,32 +229,30 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 100),
                   const Text(
-                    'With our easy-to-use app planning your\n next adventure is a breeze!',
+                    '',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      minimumSize: MaterialStateProperty.all<Size>(const Size(30, 60)),
-                    ),
-                    child: const SizedBox(
-                      height: 60,
-                      child: Center(
-                        child: Text(
-                          'Plan my Trip',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(vertical: 10, horizontal: 20)), // Adjust padding as needed
+                        minimumSize: MaterialStateProperty.all<Size>(const Size(150, 40)), // Adjust size as needed
+                      ),
+                      child: const Text(
+                        'Plan my Trip',
+                        style: TextStyle(
+                          fontSize: 18, // Adjust font size as needed
                         ),
                       ),
                     ),
@@ -262,6 +260,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+
             const SizedBox(height: 40),
             const Padding(
               padding: EdgeInsets.only(left: 16.0),
