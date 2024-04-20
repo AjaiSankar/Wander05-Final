@@ -46,6 +46,13 @@ class _DisasterReportPageState extends State<DisasterReportPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Text(
+                'Recent Disaster Reports',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 value: selectedDistrict,
@@ -113,15 +120,18 @@ class _DisasterReportPageState extends State<DisasterReportPage> {
                   for (var report in reports) {
                     final reportData =
                         report.data() as Map<String, dynamic>;
+                    int severity = reportData['severity'] ?? 0;
+                    Color cardColor = _getColorBySeverity(severity);
                     disasterList.add(
                       Card(
+                        color: cardColor,
                         child: ListTile(
                           title: Text('Reported by: ${reportData['userEmail']}'),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Reported at: ${reportData['timestamp']}'),
-                              Text('Severity: ${reportData['severity']}'),
+                              Text('Severity: $severity'),
                             ],
                           ),
                         ),
@@ -139,6 +149,16 @@ class _DisasterReportPageState extends State<DisasterReportPage> {
         ),
       ),
     );
+  }
+
+  Color _getColorBySeverity(int severity) {
+    if (severity >= 0 && severity <= 1) {
+      return Colors.yellow;
+    } else if (severity >= 2 && severity <= 3) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
+    }
   }
 
   void reportDisaster() async {
