@@ -8,6 +8,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: LoginPage(),
+      theme: ThemeData(
+        primaryColor: Colors.teal,
+        hintColor: Colors.tealAccent,
+      ),
     );
   }
 }
@@ -34,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
-        backgroundColor: Colors.teal[2],
+        backgroundColor: Colors.teal[900],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -51,23 +55,23 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Your logo image
                 Image.asset(
-                  'assets/logo1.png', // Replace with the path to your logo image
-                  width: 120.0, // Adjust the width as needed
-                  height: 120.0, // Adjust the height as needed
+                  'assets/logo1.png',
+                  width: 120.0,
+                  height: 120.0,
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 32.0),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Email',
-                    icon: Icon(Icons.email, color: Colors.white),
-                    labelStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.email, color: Colors.teal),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    // Add email validation if needed
                     if (value!.isEmpty || !value.contains('@')) {
                       return 'Please enter a valid email address';
                     }
@@ -77,11 +81,13 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Password',
-                    icon: Icon(Icons.lock, color: Colors.white),
-                    labelStyle: TextStyle(color: Colors.white),
-                    suffixIcon: Icon(Icons.visibility),
+                    prefixIcon: Icon(Icons.lock, color: Colors.teal),
+                    suffixIcon: Icon(Icons.visibility, color: Colors.teal),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                   ),
                   obscureText: true,
                   validator: (value) {
@@ -95,26 +101,36 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: () {
                     Auth authHandler = new Auth();
-                    // Validate the form before proceeding with login
                     if (_formKey.currentState!.validate()) {
                       authHandler.handleSignInEmail(_emailController.text, _passwordController.text)
-                      .then((user) {
-                            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                          .then((user) {
+                        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                       }).catchError((e) => print(e));
                     }
                   },
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 20.0), // Increased button padding
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                     primary: Colors.teal,
                   ),
-                  child: const Text('Login'),
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Login',
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 16.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Don't have an account? ",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black87),
                     ),
                     InkWell(
                       onTap: () {
@@ -122,12 +138,11 @@ class _LoginPageState extends State<LoginPage> {
                           context,
                           MaterialPageRoute(builder: (context) => SignupPage()),
                         );
-                        print('Navigate to registration screen');
                       },
-                      child: const Text(
+                      child: Text(
                         'Sign up',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.teal,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -140,10 +155,10 @@ class _LoginPageState extends State<LoginPage> {
                     // Implement navigation to the forgot password screen
                     print('Navigate to forgot password screen');
                   },
-                  child: const Text(
+                  child: Text(
                     'Forgot Password?',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.teal,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -155,5 +170,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }

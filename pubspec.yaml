@@ -51,6 +51,7 @@ dependencies:
   firebase_storage: ^11.6.9
   image_picker: ^1.0.8
   multi_image_picker: ^4.8.01
+  google_sign_in: ^6.2.1
 
 
 dev_dependencies:

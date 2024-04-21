@@ -23,20 +23,49 @@ class _UserProfilePageState extends State<UserProfilePage> {
     fetchUserDisasters();
   }
 
-  void fetchUserDisasters() async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      final userId = user.uid;
-      final querySnapshot = await _firestore
-          .collection('user_reports')
-          .where('userUid', isEqualTo: userId)
-          .get();
+void fetchUserDisasters() async {
+  final user = _auth.currentUser;
+  if (user != null) {
+    final userId = user.uid;
+    final querySnapshot = await _firestore.collection('disaster_reports').get();
 
-      setState(() {
-        _userDisasters = querySnapshot.docs.map((doc) => doc.data()).toList();
+    List<Map<String, dynamic>> userDisasters = [];
+    querySnapshot.docs.forEach((districtDoc) {
+      final districtData = districtDoc.data();
+      final district = districtData['name']; // Assuming district name is stored in a field named 'name'
+      final disasters = districtData.keys.where((key) => key != 'name').toList();
+
+      disasters.forEach((disasterType) async {
+        final disasterSnapshot = await districtDoc.reference.collection(disasterType).where('userId', isEqualTo: userId).get();
+        
+        disasterSnapshot.docs.forEach((userDoc) {
+          final userData = userDoc.data();
+          final severity = userData['severity'];
+          final timestamp = userData['timestamp'];
+          final email = userData['email'];
+          userDisasters.add({
+            'district': district,
+            'disasterType': disasterType,
+            'severity': severity,
+            'timestamp': timestamp,
+            'email': email,
+          });
+        });
       });
-    }
+    });
+
+    print('User Disasters: $userDisasters');
+
+    setState(() {
+      _userDisasters = userDisasters;
+    });
   }
+}
+
+
+
+
+
 
   void _editDetails() async {
     // Implementation remains the same
@@ -72,7 +101,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _buildProfileInfo() {
     // Implementation remains the same
-     return Padding(
+    return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
@@ -100,42 +129,46 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Widget _buildUserDisasters() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Reported Disasters',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          _userDisasters.isEmpty
-              ? Text(
-                  'No disasters reported yet.',
-                  style: TextStyle(fontSize: 16),
-                )
-              : Column(
-                  children: _userDisasters.map((disaster) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(disaster['disasterType']),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('District: ${disaster['district']}'),
-                            Text('Severity: ${disaster['severity']}'),
-                          ],
-                        ),
+ Widget _buildUserDisasters() {
+  return Padding(
+    padding: const EdgeInsets.all(20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Reported Disasters',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        _userDisasters.isEmpty
+            ? Text(
+                'No disasters reported yet.',
+                style: TextStyle(fontSize: 16),
+              )
+            : Column(
+                children: _userDisasters.map((disaster) {
+                  final disasterType = disaster['disasterType'] ?? 'Unknown';
+                  final district = disaster['district'] ?? 'Unknown';
+                  final severity = disaster['severity'] ?? 'Unknown';
+
+                  return Card(
+                    child: ListTile(
+                      title: Text(disasterType),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('District: $district'),
+                          Text('Severity: $severity'),
+                        ],
                       ),
-                    );
-                  }).toList(),
-                ),
-        ],
-      ),
-    );
-  }
+                    ),
+                  );
+                }).toList(),
+              ),
+      ],
+    ),
+  );
+}
 
   Widget _buildInterests() {
     return Padding(

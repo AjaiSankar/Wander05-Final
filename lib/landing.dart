@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 class LandingPage extends StatefulWidget {
@@ -9,106 +7,91 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  late VideoPlayerController _controller;
-  late String _currentQuote;
-  int _quoteIndex = 0;
-
-  List<String> _quotes = [
-    "",
-    "",
-    // Add more quotes as needed
-  ];
-
-  late Timer _quoteTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.asset('videos/main.mp4')
-      ..initialize().then((_) {
-        _controller.play();
-        _controller.setLooping(true);
-        setState(() {});
-      });
-    _currentQuote = _getRandomQuote();
-    _startQuoteTimer();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-    _quoteTimer.cancel();
-  }
-
-  String _getRandomQuote() {
-    return _quotes[_quoteIndex];
-  }
-
-  void _startQuoteTimer() {
-    const quoteDuration = Duration(seconds: 5); // Adjust quote display duration as needed
-    _quoteTimer = Timer.periodic(quoteDuration, (Timer timer) {
-      setState(() {
-        _quoteIndex = (_quoteIndex + 1) % _quotes.length;
-        _currentQuote = _getRandomQuote();
-      });
-    });
-  }
+  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue, // Background color
       body: Stack(
-        children: <Widget>[
-          SizedBox.expand(
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: SizedBox(
-                width: _controller.value.size.width,
-                height: _controller.value.size.height,
-                child: VideoPlayer(_controller),
-              ),
-            ),
+        children: [
+          PageView(
+            controller: _pageController,
+            children: [
+              _buildVideoSlide(videoPath: 'videos/land1.mp4'),
+              _buildVideoSlide(videoPath: 'videos/land1.mp4'),
+              _buildLastSlide(context),
+            ],
           ),
           Positioned(
-            bottom: 0,
+            bottom: 20,
             left: 0,
             right: 0,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-              color: Colors.black.withOpacity(0.3),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AnimatedOpacity(
-                    duration: Duration(milliseconds: 500),
-                    opacity: 1.0,
-                    child: Text(
-                      _currentQuote,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20), // Add space between text and button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      minimumSize: Size(double.infinity, 0), // full width
-                    ),
-                    child: Text(
-                      'GET STARTED',
-                      style: TextStyle(fontSize: 20.0),
-                    ),
-                  ),
-                ],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.ease,
+                    );
+                  },
+                ),
+                SizedBox(width: 10),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onPressed: () {
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.ease,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVideoSlide({required String videoPath}) {
+    final VideoPlayerController _controller = VideoPlayerController.asset(videoPath);
+    _controller.initialize().then((_) {
+      _controller.play();
+      setState(() {});
+    });
+
+    return VideoPlayer(_controller);
+  }
+
+  Widget _buildLastSlide(BuildContext context) {
+    return Container(
+      color: Colors.teal, // Change color or add decoration as needed
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Ready to Start Your Journey?',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              // Navigate to login page
+            },
+            child: Text('Login'),
+          ),
+          SizedBox(height: 10),
+          TextButton(
+            onPressed: () {
+              // Continue as guest action
+            },
+            child: Text(
+              'Continue as Guest',
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
