@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:wander05_final/Districts/Alappuzha/alappuzha.dart';
+import 'package:wander05_final/Districts/Kollam/kollam.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/UserProfilePage.dart';
 import 'package:wander05_final/firebase_options.dart';
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LandingPage(),
+      home: LoginPage(),
       routes: {
         '/login': (context) => LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
@@ -113,7 +115,8 @@ class _HomePageState extends State<HomePage> {
   // Function to handle logout
   Future<void> _signOut() async {
     await _auth.signOut();
-    Navigator.of(context).pushReplacementNamed('/login'); // Navigate to login page after logout
+    Navigator.of(context)
+        .pushReplacementNamed('/login'); // Navigate to login page after logout
   }
 
   @override
@@ -177,7 +180,8 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         featureTexts[index],
-                        style: const TextStyle(fontSize: 25.0, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 25.0, color: Colors.white),
                       ),
                     ),
                   ),
@@ -185,17 +189,18 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             const SizedBox(height: 20),
-             Text(
-                'Hi ${_auth.currentUser?.email ?? 'unknown'}, where do you want to go?',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+            Text(
+              'Hi ${_auth.currentUser?.email ?? 'unknown'}, where do you want to go?',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
             GestureDetector(
               child: TextField(
                 onTap: () {
                   showSearch(
                     context: context,
-                    delegate: DistrictSearch(filteredDistricts, filterDistricts),
+                    delegate:
+                        DistrictSearch(filteredDistricts, filterDistricts),
                   );
                 },
                 decoration: const InputDecoration(
@@ -215,7 +220,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, // Aligns children vertically centered
+                mainAxisAlignment: MainAxisAlignment
+                    .center, // Aligns children vertically centered
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Padding(
@@ -241,13 +247,22 @@ class _HomePageState extends State<HomePage> {
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TripPreferencesPage()));
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(vertical: 10, horizontal: 20)), // Adjust padding as needed
-                        minimumSize: MaterialStateProperty.all<Size>(const Size(150, 40)), // Adjust size as needed
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromARGB(255, 12, 84, 193)),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20)), // Adjust padding as needed
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(150, 40)), // Adjust size as needed
                       ),
                       child: const Text(
                         'Plan my Trip',
@@ -260,7 +275,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 40),
             const Padding(
               padding: EdgeInsets.only(left: 16.0),
@@ -306,7 +320,8 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Text(
                                 weekendTrips[index]['name'],
-                                style: const TextStyle(fontSize: 20, color: Colors.white),
+                                style: const TextStyle(
+                                    fontSize: 20, color: Colors.white),
                               ),
                               const SizedBox(height: 10),
                               ElevatedButton(
@@ -314,8 +329,12 @@ class _HomePageState extends State<HomePage> {
                                   // Handle button press
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.blue),
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
                                 ),
                                 child: Text('Explore'),
                               ),
@@ -331,30 +350,29 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-  bottomNavigationBar: ConvexAppBar(
-  backgroundColor: const Color.fromARGB(255, 12, 84, 193),
-  items: const [
-    TabItem(icon: Icons.home, title: 'Home'),
-    TabItem(icon: Icons.map, title: 'My Trips'),
-    TabItem(icon: Icons.add, title: 'New Trip'),
-    TabItem(icon: Icons.hotel, title: 'Disasters'),
-    TabItem(icon: Icons.people, title: 'Profile'),
-  ],
-  onTap: (int index) {
-    if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DisasterReportPage()),
-      );
-    } else if (index == 4) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => UserProfilePage()),
-      );
-    }
-  },
-),
-
+      bottomNavigationBar: ConvexAppBar(
+        backgroundColor: const Color.fromARGB(255, 12, 84, 193),
+        items: const [
+          TabItem(icon: Icons.home, title: 'Home'),
+          TabItem(icon: Icons.map, title: 'My Trips'),
+          TabItem(icon: Icons.add, title: 'New Trip'),
+          TabItem(icon: Icons.hotel, title: 'Disasters'),
+          TabItem(icon: Icons.people, title: 'Profile'),
+        ],
+        onTap: (int index) {
+          if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DisasterReportPage()),
+            );
+          } else if (index == 4) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserProfilePage()),
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -415,7 +433,8 @@ class DistrictSearch extends SearchDelegate<String> {
                     child: getDistrictPage(suggestionList[index]),
                   );
                 },
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
                   return child;
                 },
                 transitionDuration: const Duration(milliseconds: 500),
@@ -433,7 +452,9 @@ class DistrictSearch extends SearchDelegate<String> {
       case 'Thiruvananthapuram':
         return TrivandrumPage();
       case 'Kollam':
-        return TrivandrumPage();
+        return KollamPage();
+      case 'Alappuzha':
+        return AlappuzhaPage();
       default:
         return Container();
     }
