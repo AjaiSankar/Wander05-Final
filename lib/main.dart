@@ -455,6 +455,8 @@ class DistrictSearch extends SearchDelegate<String> {
         return KollamPage();
       case 'Alappuzha':
         return AlappuzhaPage();
+      case 'Pathanamthitta':
+        return PathanamthittaPage();
       default:
         return Container();
     }
