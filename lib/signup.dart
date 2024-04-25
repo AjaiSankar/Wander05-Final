@@ -50,7 +50,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Full Name',
                       icon: Icon(Icons.person, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -59,7 +59,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       icon: Icon(Icons.email, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -69,7 +69,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Password',
                       icon: Icon(Icons.lock, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                     obscureText: true,
                   ),
@@ -79,7 +79,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Confirm Password',
                       icon: Icon(Icons.lock, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                     obscureText: true,
                   ),

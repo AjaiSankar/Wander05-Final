@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 20),
              Text(
-                'Hi ${_auth.currentUser?.email ?? 'unknown'}, where do you want to go?',
+                'Hi ${_auth.currentUser?.email ?? 'user'}, where do you want to go?',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             const SizedBox(height: 20),
