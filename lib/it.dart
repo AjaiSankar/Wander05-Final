@@ -26,6 +26,23 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
   List<String> transportationTypes = ['Public Transport', 'Rental Car', 'Taxi', 'Bicycle'];
   List<String> activityTypes = ['Outdoor', 'Indoor', 'Sightseeing', 'Cultural'];
   List<String> cuisineTypes = ['Traditional', 'International', 'Vegetarian', 'Vegan'];
+  
+  List<String> keralaDistricts = [
+    'Thiruvananthapuram',
+    'Kollam',
+    'Pathanamthitta',
+    'Alappuzha',
+    'Kottayam',
+    'Idukki',
+    'Ernakulam',
+    'Thrissur',
+    'Palakkad',
+    'Malappuram',
+    'Kozhikode',
+    'Wayanad',
+    'Kannur',
+    'Kasaragod'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -60,26 +77,28 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
                   steps: [
                     Step(
                       title: Text('Start Place'),
-                      content: _buildTextField(
+                      content: _buildDropdownField(
                         label: 'Start Place',
-                        hint: 'Enter your starting place',
+                        value: startplace,
                         onChanged: (value) {
                           setState(() {
                             startplace = value;
                           });
                         },
+                        items: keralaDistricts,
                       ),
                     ),
                     Step(
                       title: Text('Destination Place'),
-                      content: _buildTextField(
+                      content: _buildDropdownField(
                         label: 'Destination Place',
-                        hint: 'Enter your destination place',
+                        value: destinationCountry,
                         onChanged: (value) {
                           setState(() {
                             destinationCountry = value;
                           });
                         },
+                        items: keralaDistricts,
                       ),
                     ),
                     Step(
