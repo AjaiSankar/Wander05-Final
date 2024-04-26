@@ -8,6 +8,7 @@ class TripPreferencesPage extends StatefulWidget {
 
 class _TripPreferencesPageState extends State<TripPreferencesPage> {
   int _currentStep = 0;
+  bool _isLoading = false;
 
   String? startplace;
   String? destinationCountry;
@@ -32,195 +33,206 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
       appBar: AppBar(
         title: Text('Trip Preferences'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stepper(
-              type: StepperType.vertical,
-              currentStep: _currentStep,
-              onStepContinue: () {
-                if (_currentStep < 9) {
-                  setState(() {
-                    _currentStep++;
-                  });
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Itinerary(
-                        startplace: startplace!,
-                        destinationCountry: destinationCountry!,
-                        budget: budget!,
-                        travelStyle: travelStyle!,
-                        interestsNew: interests,
-                        accommodationType: accommodationType!,
-                        transportationType: transportationType!,
-                        activityType: activityType!,
-                        cuisineType: cuisineType!,
-                        tripDuration: tripDuration!,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Stepper(
+                  type: StepperType.vertical,
+                  currentStep: _currentStep,
+                  onStepContinue: () {
+                    if (_currentStep < 9) {
+                      setState(() {
+                        _currentStep++;
+                      });
+                    } else {
+                      _generatePlan();
+                    }
+                  },
+                  onStepCancel: () {
+                    if (_currentStep > 0) {
+                      setState(() {
+                        _currentStep -= 1;
+                      });
+                    }
+                  },
+                  steps: [
+                    Step(
+                      title: Text('Start Place'),
+                      content: _buildTextField(
+                        label: 'Start Place',
+                        hint: 'Enter your starting place',
+                        onChanged: (value) {
+                          setState(() {
+                            startplace = value;
+                          });
+                        },
                       ),
                     ),
-                  );
-                }
-              },
-              onStepCancel: () {
-                if (_currentStep > 0) {
-                  setState(() {
-                    _currentStep -= 1;
-                  });
-                }
-              },
-              steps: [
-                Step(
-                  title: Text('Start Place'),
-                  content: _buildTextField(
-                    label: 'Start Place',
-                    hint: 'Enter your starting place',
-                    onChanged: (value) {
-                      setState(() {
-                        startplace = value;
-                      });
-                    },
-                  ),
-                ),
-                Step(
-                  title: Text('Destination Place'),
-                  content: _buildTextField(
-                    label: 'Destination Place',
-                    hint: 'Enter your destination place',
-                    onChanged: (value) {
-                      setState(() {
-                        destinationCountry = value;
-                      });
-                    },
-                  ),
-                ),
-                Step(
-                  title: Text('Budget'),
-                  content: _buildTextField(
-                    label: 'Budget',
-                    hint: 'Enter your budget',
-                    onChanged: (value) {
-                      setState(() {
-                        budget = value;
-                      });
-                    },
-                  ),
-                ),
-                Step(
-                  title: Text('Travel Style'),
-                  content: _buildDropdownField(
-                    label: 'Travel Style',
-                    value: travelStyle,
-                    onChanged: (value) {
-                      setState(() {
-                        travelStyle = value!;
-                      });
-                    },
-                    items: travelStyles.toSet().toList(),
-                  ),
-                ),
-                Step(
-                  title: Text('Interests'),
-                  content: _buildCheckboxList(
-                    label: 'Interests',
-                    values: interests,
-                    onChanged: (value) {
-                      setState(() {
-                        if (interests.contains(value)) {
-                          interests.remove(value);
-                        } else {
-                          interests.add(value);
-                        }
-                      });
-                    },
-                    items: ['Nature', 'History', 'Food', 'Shopping'],
-                  ),
-                ),
-                Step(
-                  title: Text('Accommodation Type'),
-                  content: _buildDropdownField(
-                    label: 'Accommodation Type',
-                    value: accommodationType,
-                    onChanged: (value) {
-                      setState(() {
-                        accommodationType = value!;
-                      });
-                    },
-                    items: accommodationTypes.toSet().toList(),
-                  ),
-                ),
-                Step(
-                  title: Text('Transportation Type'),
-                  content: _buildDropdownField(
-                    label: 'Transportation Type',
-                    value: transportationType,
-                    onChanged: (value) {
-                      setState(() {
-                        transportationType = value!;
-                      });
-                    },
-                    items: transportationTypes.toSet().toList(),
-                  ),
-                ),
-                Step(
-                  title: Text('Activity Type'),
-                  content: _buildDropdownField(
-                    label: 'Activity Type',
-                    value: activityType,
-                    onChanged: (value) {
-                      setState(() {
-                        activityType = value!;
-                      });
-                    },
-                    items: activityTypes.toSet().toList(),
-                  ),
-                ),
-                Step(
-                  title: Text('Cuisine Type'),
-                  content: _buildDropdownField(
-                    label: 'Cuisine Type',
-                    value: cuisineType,
-                    onChanged: (value) {
-                      setState(() {
-                        cuisineType = value!;
-                      });
-                    },
-                    items: cuisineTypes.toSet().toList(),
-                  ),
-                ),
-                Step(
-                  title: Text('Trip Duration'),
-                  content: _buildTextField(
-                    label: 'Trip Duration',
-                    hint: "Enter your trip duration",
-                    onChanged: (value) {
-                      setState(() {
-                        tripDuration = value;
-                      });
-                    },
-                  ),
+                    Step(
+                      title: Text('Destination Place'),
+                      content: _buildTextField(
+                        label: 'Destination Place',
+                        hint: 'Enter your destination place',
+                        onChanged: (value) {
+                          setState(() {
+                            destinationCountry = value;
+                          });
+                        },
+                      ),
+                    ),
+                    Step(
+                      title: Text('Budget'),
+                      content: _buildTextField(
+                        label: 'Budget',
+                        hint: 'Enter your budget',
+                        onChanged: (value) {
+                          setState(() {
+                            budget = value;
+                          });
+                        },
+                      ),
+                    ),
+                    Step(
+                      title: Text('Travel Style'),
+                      content: _buildDropdownField(
+                        label: 'Travel Style',
+                        value: travelStyle,
+                        onChanged: (value) {
+                          setState(() {
+                            travelStyle = value!;
+                          });
+                        },
+                        items: travelStyles.toSet().toList(),
+                      ),
+                    ),
+                    Step(
+                      title: Text('Interests'),
+                      content: _buildCheckboxList(
+                        label: 'Interests',
+                        values: interests,
+                        onChanged: (value) {
+                          setState(() {
+                            if (interests.contains(value)) {
+                              interests.remove(value);
+                            } else {
+                              interests.add(value);
+                            }
+                          });
+                        },
+                        items: ['Nature', 'History', 'Food', 'Shopping'],
+                      ),
+                    ),
+                    Step(
+                      title: Text('Accommodation Type'),
+                      content: _buildDropdownField(
+                        label: 'Accommodation Type',
+                        value: accommodationType,
+                        onChanged: (value) {
+                          setState(() {
+                            accommodationType = value!;
+                          });
+                        },
+                        items: accommodationTypes.toSet().toList(),
+                      ),
+                    ),
+                    Step(
+                      title: Text('Transportation Type'),
+                      content: _buildDropdownField(
+                        label: 'Transportation Type',
+                        value: transportationType,
+                        onChanged: (value) {
+                          setState(() {
+                            transportationType = value!;
+                          });
+                        },
+                        items: transportationTypes.toSet().toList(),
+                      ),
+                    ),
+                    Step(
+                      title: Text('Activity Type'),
+                      content: _buildDropdownField(
+                        label: 'Activity Type',
+                        value: activityType,
+                        onChanged: (value) {
+                          setState(() {
+                            activityType = value!;
+                          });
+                        },
+                        items: activityTypes.toSet().toList(),
+                      ),
+                    ),
+                    Step(
+                      title: Text('Cuisine Type'),
+                      content: _buildDropdownField(
+                        label: 'Cuisine Type',
+                        value: cuisineType,
+                        onChanged: (value) {
+                          setState(() {
+                            cuisineType = value!;
+                          });
+                        },
+                        items: cuisineTypes.toSet().toList(),
+                      ),
+                    ),
+                    Step(
+                      title: Text('Trip Duration'),
+                      content: _buildTextField(
+                        label: 'Trip Duration',
+                        hint: "Enter your trip duration",
+                        onChanged: (value) {
+                          setState(() {
+                            tripDuration = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            if (_currentStep == 9)
-              ElevatedButton(
-                onPressed: () {
-                  // Add code to generate plan
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Generate Plan'),
-                    SizedBox(width: 10),
-                    CircularProgressIndicator(),
-                  ],
-                ),
+          ),
+          if (_isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
+  }
+
+  void _generatePlan() {
+    setState(() {
+      _isLoading = true;
+    });
+    // Simulate a delay to show loading indicator
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Itinerary(
+            startplace: startplace!,
+            destinationCountry: destinationCountry!,
+            budget: budget!,
+            travelStyle: travelStyle!,
+            interestsNew: interests,
+            accommodationType: accommodationType!,
+            transportationType: transportationType!,
+            activityType: activityType!,
+            cuisineType: cuisineType!,
+            tripDuration: tripDuration!,
+          ),
+        ),
+      ).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    });
   }
 
   Widget _buildDropdownField({
@@ -290,3 +302,4 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
     );
   }
 }
+

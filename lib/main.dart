@@ -7,7 +7,9 @@ import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/UserProfilePage.dart';
 import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
+import 'package:wander05_final/itinerary.dart';
 import 'package:wander05_final/landing.dart';
+import 'package:wander05_final/loader.dart';
 import 'package:wander05_final/login.dart';
 import 'package:wander05_final/Disaster_Alert/disaster.dart';
 
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LandingPage(),
+      home: LoginPage(),
       routes: {
         '/login': (context) => LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
@@ -349,7 +351,7 @@ class _HomePageState extends State<HomePage> {
     } else if (index == 4) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UserProfilePage()),
+        MaterialPageRoute(builder: (context) => AccountDetailsPage()),
       );
     }
   },

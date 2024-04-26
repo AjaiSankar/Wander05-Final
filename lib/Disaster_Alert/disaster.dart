@@ -2,6 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeNotifications();
+}
+
+Future<void> initializeNotifications() async {
+  final AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
 
 class DisasterReportPage extends StatefulWidget {
   @override
@@ -99,8 +118,7 @@ class _DisasterReportPageState extends State<DisasterReportPage> {
               ),
               SizedBox(height: 20),
 
-
-  StreamBuilder<QuerySnapshot>(
+StreamBuilder<QuerySnapshot>(
   stream: _firestore
       .collection('disaster_reports')
       .doc(selectedDistrict)
@@ -131,6 +149,10 @@ class _DisasterReportPageState extends State<DisasterReportPage> {
       );
     }
     final reports = snapshot.data!.docs;
+    int totalReports = reports.length; // Count the total number of reports   
+  if (totalReports > 5) {
+  showNotification();
+     }
     List<Widget> disasterList = [];
     final currentUserEmail = _auth.currentUser?.email;
     for (var report in reports) {
@@ -141,72 +163,92 @@ class _DisasterReportPageState extends State<DisasterReportPage> {
       disasterList.add(
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Reported by: $reportedByEmail',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    'Reported at: ${_dateFormat.format(DateTime.parse(reportData['timestamp']))} ${_timeFormat.format(DateTime.parse(reportData['timestamp']))}',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    'Severity: $severity',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  if (reportedByEmail == currentUserEmail)
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        showConfirmationDialog(report.reference.id, reportedByEmail);
-                      },
-                      icon: Icon(Icons.edit),
-                      label: Text('Update/Withdraw'),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+          child: Row( // Use Row to layout the card and the count
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reported by: $reportedByEmail',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Reported at: ${_dateFormat.format(DateTime.parse(reportData['timestamp']))} ${_timeFormat.format(DateTime.parse(reportData['timestamp']))}',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Severity: $severity',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        if (reportedByEmail == currentUserEmail)
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              showConfirmationDialog(report.reference.id, reportedByEmail);
+                            },
+                            icon: Icon(Icons.edit),
+                            label: Text('Withdraw'),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                ],
+                  ),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Text(
+                  '$totalReports', // Display the total count here
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
     }
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: disasterList,
     );
   },
 ),
+
 
             ],
           ),
@@ -435,4 +477,24 @@ class _DisasterReportPageState extends State<DisasterReportPage> {
       );
     }
   }
+
+void showNotification() async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'your_channel_id', // Change this to a unique channel ID
+    'Channel Name',
+    importance: Importance.max,
+    priority: Priority.high,
+  );
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    'Disaster Alert',
+    'The count of disasters has exceeded 5!',
+    platformChannelSpecifics,
+    payload: 'item x',
+  );
+}
+
 }

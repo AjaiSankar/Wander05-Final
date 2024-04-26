@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -34,14 +36,17 @@ class Itinerary extends StatefulWidget {
 
   @override
   State<Itinerary> createState() => _ItineraryState();
+
+  void fetchResponse() {}
 }
 
 class _ItineraryState extends State<Itinerary> {
   String result = '';
   String _typingText = '';
+  String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "sk-proj-siwnVsyyNVwk9lktxcsqT3BlbkFJEOqjv5t5sdT7fdbGtr0z";
+  final String apiKey = "API KEY";
 
   Future<void> fetchResponse(
     String startplace,
@@ -56,7 +61,8 @@ class _ItineraryState extends State<Itinerary> {
     String tripDuration,
   ) async {
     setState(() {
-      _typingText = 'Generating itinerary';
+      _typingText = 'Generating\nitinerary';
+      _typingText1 = 'Creating your plan..';
     });
 
     final response = await http.post(
@@ -75,7 +81,7 @@ class _ItineraryState extends State<Itinerary> {
           {
             "role": "user",
             "content":
-            "Generate a personalized travel itinerary for a trip from $startplace to $destinationCountry, considering a budget of ₹$budget. Ensure that the trip stays within the specified budget. The traveler prefers a $travelStyle vacation and enjoys $interestsNew. They seek $accommodationType accommodations and prefer $transportationType transportation. The itinerary should span $tripDuration days, featuring a mix of activities and dining options. For each day of the trip, provide detailed recommendations with morning, afternoon, and evening activities, along with their approximate costs. Include suggested destinations, activities, and dining spots. Ensure that the chosen path from $startplace to $destinationCountry is optimal, incorporating attractions along the route. Format the itinerary consistently as follows: Day X (Activity/Travel): Morning Activity: Cost: ₹ Afternoon Activity: Cost: ₹ Evening Activity: Cost: ₹. At the end of the itinerary, provide a list of all mentioned places along with their respective latitude and longitude coordinates for navigation purposes, ensuring they are listed in the correct order from the start to the destination along the optimal path. Estimated Total Cost: ₹. Approximate Costs: Accommodation: ₹ Transportation: ₹,Activities: ₹ per activity Dining: ₹ per meal"}
+            "Generate a personalized travel itinerary for a trip from $startplace to $destinationCountry, considering a budget of ₹$budget. Ensure that the trip stays within the specified budget. The traveler prefers a $travelStyle vacation and enjoys $interestsNew. They seek $accommodationType accommodations and prefer $transportationType transportation. The itinerary should span $tripDuration days, featuring a mix of activities and dining options. For each day of the trip, provide detailed recommendations with morning, afternoon, and evening activities, along with their approximate costs. Include suggested destinations, activities, and dining spots. Ensure that the chosen path from $startplace to $destinationCountry is optimal, incorporating attractions along the route. Format the itinerary consistently as follows: Day X (Activity/Travel): Morning Activity: Cost: ₹ Afternoon Activity: Cost: ₹ Evening Activity: Cost: ₹. At the end of the itinerary, provide a list of all mentioned places along with their respective latitude and longitude coordinates for navigation purposes, ensuring they are listed in the correct order from the start to the destination along the optimal path. Estimated Total Cost: ₹. Approximate Costs: Accommodation: ₹ Transportation: ₹,Activities: ₹ per activity Dining: ₹ per meal. MAke sure to print latitude and longitude of all mention places and destinations"}
         ],
       }),
     );
@@ -96,108 +102,149 @@ class _ItineraryState extends State<Itinerary> {
       throw Exception('Failed to load response: ${response.body}');
     }
   }
-
- @override
+@override
 Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(
-        widget.destinationCountry,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 22,
+  return Stack(
+    children: [
+      Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.destinationCountry,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          backgroundColor: Colors.blue,
+          elevation: 0, // Remove elevation
         ),
-      ),
-      backgroundColor: Colors.blue,
-      elevation: 0, // Remove elevation
-    ),
-    body: Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        fetchResponse(
-                          widget.startplace,
-                          widget.destinationCountry,
-                          widget.budget,
-                          widget.travelStyle,
-                          widget.interestsNew,
-                          widget.accommodationType,
-                          widget.transportationType,
-                          widget.activityType,
-                          widget.cuisineType,
-                          widget.tripDuration,
-                        );
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Show loading animation
+
+                      // Fetch response
+                      fetchResponse(
+                        widget.startplace,
+                        widget.destinationCountry,
+                        widget.budget,
+                        widget.travelStyle,
+                        widget.interestsNew,
+                        widget.accommodationType,
+                        widget.transportationType,
+                        widget.activityType,
+                        widget.cuisineType,
+                        widget.tripDuration,
+                      ).then((_) {
+                        // Hide loading animation after fetching data
+                        setState(() {
+                          _typingText1 = ''; // Clear loading text
+                        });
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue, // Button color
+                      onPrimary: Colors.white, // Text color
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                      ),
+                      elevation: 3, // Button elevation
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(
+                          _typingText.isEmpty ? 'Regenerate\n Itinerary' : _typingText,
+                          style: TextStyle(fontSize: 18),
+                          textAlign: TextAlign.center, // Center text
+                        )
+                      ],
+                    ),
+                  ),
+                  // Save Plan button with animation
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        // onPressed callback logic for saving the plan
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.blue, // Button color
+                        primary: Colors.green, // Button color
                         onPrimary: Colors.white, // Text color
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // Rounded corners
+                        ),
+                        elevation: 3, // Button elevation
                       ),
-                      child: Text(
-                        _typingText.isEmpty ? 'Regenerate Itinerary' : '$_typingText...',
-                        style: TextStyle(fontSize: 18),
+                      child: Row(
+                        children: [
+                          Icon(Icons.save),
+                          SizedBox(width: 8),
+                          Text(
+                            'Save\nPlan',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
                       ),
                     ),
-                    // Save Plan button with animation
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Add functionality to save plan
-                          // For example: savePlan();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.blue, // Button color
-                          onPrimary: Colors.white, // Text color
-                          padding: EdgeInsets.all(16),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.save),
-                            SizedBox(width: 8),
-                            Text(
-                              'Save Plan',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              _buildItinerary(),
+            ],
+          ),
+        ),
+        bottomNavigationBar: ConvexAppBar(
+          backgroundColor: const Color.fromARGB(255, 12, 84, 193),
+          items: [
+            const TabItem(icon: Icons.home, title: 'Home'),
+            const TabItem(icon: Icons.map, title: 'My Trips'),
+            const TabItem(icon: Icons.add, title: 'New Trip'),
+            const TabItem(icon: Icons.hotel, title: 'Bookings'),
+            const TabItem(icon: Icons.people, title: 'Profile'),
+          ],
+          onTap: (int i) => print('click index=$i'),
+        ),
+      ),
+      if (_typingText1.isNotEmpty) // Show loading animation overlay if _typingText is not empty
+        Positioned.fill(
+          child: Container(
+            color: Colors.black.withOpacity(0.5), // Semi-transparent background
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(), // Loading indicator
+                  SizedBox(height: 10),
+                  Text(
+                    _typingText1,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 18, 5, 200),
+                      fontSize: 16,
                     ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                _buildItinerary(),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ],
-    ),
-    bottomNavigationBar: ConvexAppBar(
-        backgroundColor: const Color.fromARGB(255, 12, 84, 193),
-        items: [
-          const TabItem(icon: Icons.home, title: 'Home'),
-          const TabItem(icon: Icons.map, title: 'My Trips'),
-          const TabItem(icon: Icons.add, title: 'New Trip'),
-          const TabItem(icon: Icons.hotel, title: 'Bookings'),
-          const TabItem(icon: Icons.people, title: 'Profile'),
-        ],
-        onTap: (int i) => print('click index=$i'),
-      ),
-    
+    ],
   );
 }
+
+
 
 
 Widget _buildItinerary() {
