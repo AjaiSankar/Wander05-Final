@@ -46,7 +46,7 @@ class _ItineraryState extends State<Itinerary> {
   String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "API KEY";
+  final String apiKey = "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";
 
   Future<void> fetchResponse(
     String startplace,

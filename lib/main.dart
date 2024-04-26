@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: LandingPage(),
       routes: {
         '/login': (context) => LoginPage(),
         //'/itinerary': (context) => const Itinerary(),
@@ -351,7 +351,7 @@ class _HomePageState extends State<HomePage> {
     } else if (index == 4) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AccountDetailsPage()),
+        MaterialPageRoute(builder: (context) => UserProfilePage()),
       );
     }
   },
