@@ -54,7 +54,7 @@ class _ItineraryState extends State<Itinerary> {
   String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "API KEY HERE";
+  final String apiKey = "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";
   void initState() {
     super.initState();
     _getLocation();
@@ -92,7 +92,7 @@ class _ItineraryState extends State<Itinerary> {
           {
             "role": "user",
             "content":
-            "Generate a personalized travel itinerary for a trip from $startplace to $destinationCountry, considering a budget of ₹$budget. Ensure that the trip stays within the specified budget. The traveler prefers a $travelStyle vacation and enjoys $interestsNew. They seek $accommodationType accommodations and prefer $transportationType transportation. The itinerary should span $tripDuration days, featuring a mix of activities and dining options. For each day of the trip, provide detailed recommendations with morning, afternoon, and evening activities, along with their approximate costs. Include suggested destinations, activities, and dining spots. Ensure that the chosen path from $startplace to $destinationCountry is optimal, incorporating attractions along the route. Format the itinerary consistently as follows: Day X (Activity/Travel): Morning Activity: Cost: ₹ Afternoon Activity: Cost: ₹ Evening Activity: Cost: ₹. At the end of the itinerary, provide a list of all mentioned places along with their respective latitude and longitude coordinates for navigation purposes, ensuring they are listed in the correct order from the start to the destination along the optimal path. Estimated Total Cost: ₹. Approximate Costs: Accommodation: ₹ Transportation: ₹,Activities: ₹ per activity Dining: ₹ per meal. MAke sure to print latitude and longitude of all mention places and destinations"}
+            "Generate a personalized travel itinerary for a trip from $startplace to $destinationCountry, considering a budget of ₹$budget. Ensure that the trip stays within the specified budget. The traveler prefers a $travelStyle vacation and enjoys $interestsNew. They seek $accommodationType accommodations and prefer $transportationType transportation. The itinerary should span $tripDuration days, featuring a mix of activities and dining options. For each day of the trip, provide detailed recommendations with morning, afternoon, and evening activities, along with their approximate costs. Include suggested destinations, activities, and dining spots. Ensure that the chosen path from $startplace to $destinationCountry is optimal, incorporating attractions along the route. Format the itinerary consistently as follows: Day X (Activity/Travel): Morning Activity: Cost: ₹ Afternoon Activity: Cost: ₹ Evening Activity: Cost: ₹. At the end of the itinerary, provide a list of all mentioned places along with their respective latitude and longitude coordinates for navigation purposes, ensuring they are listed in the correct order from the start to the destination along the optimal path. Estimated Total Cost: ₹. Approximate Costs: Accommodation: ₹ Transportation: ₹,Activities: ₹ per activity Dining: ₹ per meal. Make sure to print latitude and longitude of all mention places and destinations, the heading of it should be ""Destinations and Coordinates:"" and the format should be ""Place Name (Latitude, Longitude)"", it should only be at the end of plan"}
         ],
       }),
     );
@@ -118,123 +118,120 @@ class _ItineraryState extends State<Itinerary> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.destinationCountry,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        widget.destinationCountry,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 22,
         ),
-        backgroundColor: Colors.blue,
-        elevation: 0, // Remove elevation
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: Colors.blue,
+      elevation: 0, // Remove elevation
+    ),
+    body: ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          fetchResponse(
-                            widget.startplace,
-                            widget.destinationCountry,
-                            widget.budget,
-                            widget.travelStyle,
-                            widget.interestsNew,
-                            widget.accommodationType,
-                            widget.transportationType,
-                            widget.activityType,
-                            widget.cuisineType,
-                            widget.tripDuration,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue, // Button color
-                          foregroundColor: Colors.white, // Text color
-                          padding: const EdgeInsets.all(16),
-                        ),
-                        child: Text(
-                          _typingText.isEmpty ? 'Regenerate Itinerary' : '$_typingText...',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      // Save Plan button with animation
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Add functionality to save plan
-                            // For example: savePlan();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue, // Button color
-                            foregroundColor: Colors.white, // Text color
-                            padding: const EdgeInsets.all(16),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.save),
-                              SizedBox(width: 8),
-                              Text(
-                                'Save Plan',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  ElevatedButton(
+                    onPressed: () {
+                      fetchResponse(
+                        widget.startplace,
+                        widget.destinationCountry,
+                        widget.budget,
+                        widget.travelStyle,
+                        widget.interestsNew,
+                        widget.accommodationType,
+                        widget.transportationType,
+                        widget.activityType,
+                        widget.cuisineType,
+                        widget.tripDuration,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue, // Button color
+                      foregroundColor: Colors.white, // Text color
+                      padding: const EdgeInsets.all(16),
+                    ),
+                    child: Text(
+                      _typingText.isEmpty ? 'Regenerate Itinerary' : '$_typingText...',
+                      style: const TextStyle(fontSize: 18),
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  _buildItinerary(),
-                 
+                  // Save Plan button with animation
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add functionality to save plan
+                        // For example: savePlan();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue, // Button color
+                        foregroundColor: Colors.white, // Text color
+                        padding: const EdgeInsets.all(16),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.save),
+                          SizedBox(width: 8),
+                          Text(
+                            'Save Plan',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
+              const SizedBox(height: 20),
+              _buildItinerary(),
+              const SizedBox(height: 20),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     List<String> destinations = []; // Define the 'destinations' variable
+              //     _showMapDialog(context, destinations.cast<Map<String, LatLng>>());
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.blue, // Button color
+              //     foregroundColor: Colors.white, // Text color
+              //     padding: const EdgeInsets.all(16),
+              //   ),
+              //   child: const Text(
+              //     'Show in Map',
+              //     style: TextStyle(fontSize: 18),
+              //   ),
+              // ),
+              const SizedBox(height: 20),
+              _buildHotelsCarousel(),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                _showMapDialog(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Button color
-                foregroundColor: Colors.white, // Text color
-                padding: const EdgeInsets.all(16),
-              ),
-              child: const Text(
-                'Show in Map',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-          ),
-          _buildHotelsCarousel(),
-        ],
-      ),
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: const Color.fromARGB(255, 12, 84, 193),
-        items: const [
-          TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.map, title: 'My Trips'),
-          TabItem(icon: Icons.add, title: 'New Trip'),
-          TabItem(icon: Icons.hotel, title: 'Bookings'),
-          TabItem(icon: Icons.people, title: 'Profile'),
-        ],
-        onTap: (int i) => print('click index=$i'),
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+    bottomNavigationBar: ConvexAppBar(
+      backgroundColor: const Color.fromARGB(255, 12, 84, 193),
+      items: const [
+        TabItem(icon: Icons.home, title: 'Home'),
+        TabItem(icon: Icons.map, title: 'My Trips'),
+        TabItem(icon: Icons.add, title: 'New Trip'),
+        TabItem(icon: Icons.hotel, title: 'Bookings'),
+        TabItem(icon: Icons.people, title: 'Profile'),
+      ],
+      onTap: (int i) => print('click index=$i'),
+    ),
+  );
+}
 
   Future<void> _getLocation() async {
     try {
@@ -283,20 +280,75 @@ class _ItineraryState extends State<Itinerary> {
 
 
   Widget _buildItinerary() {
-    if (result.isEmpty) {
-      return const Center(child: Text("No itinerary generated yet"));
-    }
-
-    List<String> days = result.split('Day ');
-    days.removeAt(0);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (String day in days) _buildDayCard(day),
-      ],
-    );
+  if (result.isEmpty) {
+    return const Center(child: Text("No itinerary generated yet"));
   }
+
+  List<String> days = result.split('Day ');
+  days.removeAt(0); // Remove the first empty element
+
+  List<Map<String, LatLng>> destinations = [];
+
+  for (String day in days) {
+    List<String> sections = day.split('Destinations and Coordinates:');
+    print("Sections: $sections");
+    print("Sections length: ${sections.length}");
+    if (sections.length > 1) {
+      String destinationsString = sections[1].trim();
+      List<String> destinationsList = destinationsString.split('\n');
+      print("Destinations: $destinationsList");
+      print("Destinations length: ${destinationsList.length}");
+      for (String destination in destinationsList) {
+        List<String> parts = destination.split(RegExp(r'\(|\)'));
+        print("Parts: $parts");
+        print("Parts length: ${parts.length}");
+        if (parts.length == 3) {
+          // Extract latitude and longitude strings
+          String latLongString = parts[1].trim();
+          // Extract latitude and longitude values using a regular expression
+          RegExp latLongPattern = RegExp(r'(-?\d+\.\d+),\s*(-?\d+\.\d+)');
+          RegExpMatch? latLongMatch = latLongPattern.firstMatch(latLongString);
+          print("LatLongMatch: $latLongMatch");
+          print("LatLongMatch group 1: ${latLongMatch?.group(1)}");
+          print("LatLongMatch group 2: ${latLongMatch?.group(2)}");
+          if (latLongMatch != null) {
+            double lat = double.parse(latLongMatch.group(1)!);
+            double long = double.parse(latLongMatch.group(2)!);
+            print("Latitude: $lat, Longitude: $long");
+            destinations.add({
+              parts[0].trim(): LatLng(lat, long),
+            });
+          }
+        }
+      }
+    }
+  }
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      for (String day in days) ...[
+        _buildDayCard(day),
+      ],
+      const SizedBox(height: 20),
+      ElevatedButton(
+        onPressed: () {
+          _showMapDialog(context, destinations);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue, // Button color
+          foregroundColor: Colors.white, // Text color
+          padding: const EdgeInsets.all(16),
+        ),
+        child: const Text(
+          'Show in Map',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+    ],
+  );
+}
+
 
   Widget _buildDayCard(String day) {
     List<String> sections = day.split(RegExp(r'Morning|Afternoon|Evening'));
@@ -367,86 +419,59 @@ class _ItineraryState extends State<Itinerary> {
     );
   }
 
-  void _showMapDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          //title: Text("Map"),
-          content: SizedBox(
-            width: double.maxFinite,
-            height: 500,
-            child: FlutterMap(
-              options: MapOptions(
-                initialCenter: initialCenter,
-                initialZoom: currentZoom,
-                interactionOptions: const InteractionOptions(
-                  enableScrollWheel: true,
-                ),
+  void _showMapDialog(BuildContext context, List<Map<String, LatLng>> destinations) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 500,
+          child: FlutterMap(
+            options: MapOptions(
+              initialCenter: initialCenter,
+              initialZoom: currentZoom,
+              interactionOptions: const InteractionOptions(
+                enableScrollWheel: true,
               ),
-              children: [
-                TileLayer(
-                  urlTemplate:
-                      'https://api.mapbox.com/styles/v1/vivekunni/clv9da5t200bw01o081rx6qts/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoidml2ZWt1bm5pIiwiYSI6ImNsdjNrY29hbTB1bTUyanJ5MjZ1NmFtcXkifQ.9q187S7ZwqH6hKF8GkILXQ',
-                  additionalOptions: const {
-                    'accessToken':
-                        'pk.eyJ1Ijoidml2ZWt1bm5pIiwiYSI6ImNsdjNrY29hbTB1bTUyanJ5MjZ1NmFtcXkifQ.9q187S7ZwqH6hKF8GkILXQ',
-                    'id': 'mapbox://styles/vivekunni/clv9da5t200bw01o081rx6qts'
-                  },
-                ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      width: 50.0,
-                      height: 50.0,
-                      point: initialCenter,
-                      child: Container(
-                        child: Image.asset(
-                          "assets/gps.png",
-                        ),
-                      ),
-                    ),
-                    Marker(
-                      width: 50.0,
-                      height: 50.0,
-                      point: const LatLng(11.850, 76.271),
-                      child: Container(
-                        child: Image.asset(
-                          "assets/R.png",
-                        ),
-                      ),
-                    ),
-                    Marker(
-                      width: 50.0,
-                      height: 50.0,
-                      point: const LatLng(9.850, 76.271),
-                      child: Container(
-                        child: Image.asset(
-                          "assets/R.png",
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ],
             ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    'https://api.mapbox.com/styles/v1/vivekunni/clv9da5t200bw01o081rx6qts/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoidml2ZWt1bm5pIiwiYSI6ImNsdjNrY29hbTB1bTUyanJ5MjZ1NmFtcXkifQ.9q187S7ZwqH6hKF8GkILXQ',
+                additionalOptions: const {
+                  'accessToken':
+                      'pk.eyJ1Ijoidml2ZWt1bm5pIiwiYSI6ImNsdjNrY29hbTB1bTUyanJ5MjZ1NmFtcXkifQ.9q187S7ZwqH6hKF8GkILXQ',
+                  'id': 'mapbox://styles/vivekunni/clv9da5t200bw01o081rx6qts'
+                },
+              ),
+              MarkerLayer(
+                markers: destinations
+                    .map((destination) => Marker(
+                          width: 50.0,
+                          height: 50.0,
+                          point: destination.values.first,
+                          child:Container(
+                            child: Image.asset("assets/R.png"),
+                          ),
+                        ))
+                    .toList(),
+                
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Navigate"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Close"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      );
+    },
+  );
 }
+}
+
