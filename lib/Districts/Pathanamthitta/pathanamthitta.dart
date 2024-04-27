@@ -20,7 +20,7 @@ class PathanamthittaPage extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/pathanamthitta_cover.jpg'),
+                    image: AssetImage('images/pathanamthittacover.png'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(16),

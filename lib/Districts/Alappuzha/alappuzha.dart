@@ -20,7 +20,7 @@ class AlappuzhaPage extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/alappuzha_cover.jpg'),
+                    image: AssetImage('images/alappuzhacover.png'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(16),
