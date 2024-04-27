@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class KollamPage extends StatelessWidget {
+class KottayamPage extends StatelessWidget {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kollam Beauty'),
+        title: Text('Kottayam Beauty'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -20,14 +20,14 @@ class KollamPage extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/kollamcover.png'),
+                    image: AssetImage('images/kottayamcover.png'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
                   child: Text(
-                    'Welcome to Kollam',
+                    'Welcome to Kottayam',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -37,26 +37,26 @@ class KollamPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16),
-              // Text description of Kollam
+              // Text description of Kottayam
               Text(
-                'Kollam, also known as Quilon, is a city in the state of Kerala, India. '
-                'It is situated on the banks of Ashtamudi Lake and is known for its '
-                'historic significance, natural beauty, and cultural heritage.',
+                'Kottayam is a city in the Indian state of Kerala. It is known for its scenic beauty, '
+                'lush green landscapes, and serene backwaters. Kottayam is also famous for its ancient '
+                'churches, temples, and educational institutions.',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),
-              // Speciality icons representing different aspects of Kollam
+              // Speciality icons representing different aspects of Kottayam
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildSpecialityIcon(Icons.beach_access, 'Beaches'),
-                  _buildSpecialityIcon(Icons.local_dining, 'Cuisine'),
-                  _buildSpecialityIcon(Icons.landscape, 'Nature'),
-                  _buildSpecialityIcon(Icons.history, 'Culture'),
+                  _buildSpecialityIcon(Icons.beach_access, 'Backwaters'),
+                  _buildSpecialityIcon(Icons.local_library, 'Education'),
+                  _buildSpecialityIcon(Icons.local_hospital, 'Healthcare'),
+                  _buildSpecialityIcon(Icons.local_attraction, 'Attractions'),
                 ],
               ),
               SizedBox(height: 16),
-              // Top sights in Kollam
+              // Top sights in Kottayam
               Text(
                 'Top Sights',
                 style: TextStyle(
@@ -73,27 +73,27 @@ class KollamPage extends StatelessWidget {
                 mainAxisSpacing: 8,
                 children: [
                   _buildSightCard(
-                    'images/kollam1.png',
-                    'Kollam Beach',
-                    'Kollam Beach is a picturesque destination offering serene views and water activities.',
+                    'images/kottayam1.png',
+                    'Kumarakom Backwaters',
+                    'Kumarakom Backwaters offer enchanting boat cruises through serene waterways and lush greenery.',
                     4.5,
                   ),
                   _buildSightCard(
-                    'images/kollam2.png',
-                    'Sasthamcotta Temple',
-                    'Sasthamcotta Temple is a renowned Hindu temple known for its architecture and religious significance.',
+                    'images/kottayam2.png',
+                    'Vembanad Lake',
+                    'Vembanad Lake is the longest lake in India, famous for its backwater tourism and houseboat cruises.',
                     4.3,
                   ),
                   _buildSightCard(
-                    'images/kollam3.png',
-                    'Ashtamudi Lake',
-                    'Ashtamudi Lake is the second-largest lake in Kerala, offering breathtaking views and boat rides.',
+                    'images/kottayam3.png',
+                    'Ettumanoor Mahadeva Temple',
+                    'Ettumanoor Mahadeva Temple is an ancient Shiva temple known for its exquisite architecture and mural paintings.',
                     4.6,
                   ),
                   _buildSightCard(
-                    'images/kollam4.png',
-                    'eravipuram beach',
-                    'eravipuram beach is a picturesque destination offering serene views and water activities.',
+                    'images/kottayam4.png',
+                    'St. Mary’s Forane Church',
+                    'St. Mary’s Forane Church, also known as Martha Mariam Church, is one of the oldest Syrian Catholic churches in Kerala.',
                     4.4,
                   ),
                 ],
@@ -114,21 +114,21 @@ class KollamPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   children: [
                     _buildFoodSpotCard(
-                      'images/restaurant1.png',
-                      'Gee Bee Restaurant',
-                      'Description ofGee Bee Restaurant',
+                      'images/fs1.png',
+                      'Hotel Annapoorna',
+                      'Description of Hotel Annapoorna',
                       4.5,
                     ),
                     _buildFoodSpotCard(
-                      'images/restaurant2.png',
-                      'Thaj Fast Food',
-                      'Description of Thaj Fast Food',
+                      'images/fs2.png',
+                      'Hotel Aariyas',
+                      'Description of Hotel Aariyas',
                       4.2,
                     ),
                     _buildFoodSpotCard(
-                      'images/restaurant3.png',
-                      'Umamiz Restaurant',
-                      'Description of Umamiz Restaurant',
+                      'images/fs3.png',
+                      'Hotel Aadithya',
+                      'Description of Hotel Aadithya',
                       4.8,
                     ),
                   ],
