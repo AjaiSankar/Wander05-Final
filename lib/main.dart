@@ -6,6 +6,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:wander05_final/Districts/Alappuzha/alappuzha.dart';
 import 'package:wander05_final/Districts/Ernakulam/ernakulam.dart';
 import 'package:wander05_final/Districts/Idukki/idukki.dart';
+import 'package:wander05_final/Districts/Kannur/kannur.dart';
 import 'package:wander05_final/Districts/Kollam/kollam.dart';
 import 'package:wander05_final/Districts/Kottayam/kottayam.dart';
 import 'package:wander05_final/Districts/Palakkad/palakkad.dart';
@@ -470,13 +471,13 @@ class DistrictSearch extends SearchDelegate<String> {
       case 'Idukki':
         return IdukkiPage();
       case 'Thrissur':
-        return ThrissurPage(); 
+        return ThrissurPage();
       case 'Palakkad':
-        return PalakkadPage();    
+        return PalakkadPage();
+      case 'Kannur':
+        return KannurPage();
       default:
         return Container();
     }
   }
 }
-
-

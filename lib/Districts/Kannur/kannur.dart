@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PalakkadPage extends StatelessWidget {
+class KannurPage extends StatelessWidget {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Palakkad Beauty'),
+        title: Text('Kannur Beauty'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -20,14 +20,14 @@ class PalakkadPage extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/palakkadcover.png'),
+                    image: AssetImage('images/kannurcover.png'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
                   child: Text(
-                    'Welcome to Palakkad',
+                    'Welcome to Kannur',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -37,26 +37,27 @@ class PalakkadPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16),
-              // Text description of Palakkad
+              // Text description of Kannur
               Text(
-                'Palakkad is a city in the Indian state of Kerala. '
-                'It is known as the Gateway of Kerala due to the presence of the Palakkad Gap, '
-                'which is the only natural mountain pass in the Western Ghats. '
-                'Palakkad is famous for its historical monuments, ancient temples, and scenic beauty.',
+                'Kannur, also known as Cannanore, is a district on the northern coast '
+                'of Kerala in India. It is known for its pristine beaches, historic '
+                'forts, temples, and cultural heritage. Kannur is famous for its '
+                'Theyyam rituals, handloom industry, and vibrant folk arts.',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),
-              // Speciality icons representing different aspects of Palakkad
+              // Speciality icons representing different aspects of Kannur
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildSpecialityIcon(Icons.nature, 'Scenery'),
-                  _buildSpecialityIcon(Icons.architecture, 'Monuments'),
-                  _buildSpecialityIcon(Icons.local_florist, 'Flora & Fauna'),
+                  _buildSpecialityIcon(Icons.beach_access, 'Beaches'),
+                  _buildSpecialityIcon(Icons.history, 'History'),
+                  _buildSpecialityIcon(Icons.local_offer, 'Culture'),
+                  _buildSpecialityIcon(Icons.museum, 'Heritage'),
                 ],
               ),
               SizedBox(height: 16),
-              // Top sights in Palakkad
+              // Top sights in Kannur
               Text(
                 'Top Sights',
                 style: TextStyle(
@@ -73,27 +74,27 @@ class PalakkadPage extends StatelessWidget {
                 mainAxisSpacing: 8,
                 children: [
                   _buildSightCard(
-                    'images/palakkad1.png',
-                    'Palakkad Fort',
-                    'Palakkad Fort is an ancient fort built by Hyder Ali, offering panoramic views of the town.',
+                    'images/kannur1.png',
+                    'St. Angelo Fort',
+                    'St. Angelo Fort, also known as Kannur Fort, is a 16th-century fort overlooking the Arabian Sea.',
                     4.5,
                   ),
                   _buildSightCard(
-                    'images/palakkad2.png',
-                    'Malampuzha Dam',
-                    'Malampuzha Dam is the largest reservoir in Kerala, known for its scenic beauty and gardens.',
+                    'images/kannur2.png',
+                    'Payyambalam Beach',
+                    'Payyambalam Beach is a beautiful beach known for its golden sands and serene atmosphere.',
                     4.3,
                   ),
                   _buildSightCard(
-                    'images/palakkad3.png',
-                    'Dhoni Waterfalls',
-                    'Dhoni Waterfalls is a serene waterfall located amidst lush green forests, a popular trekking destination.',
+                    'images/kannur3.png',
+                    'Dharmadam Island',
+                    'Dharmadam Island, also known as Green Island, is a small private island near Thalassery.',
                     4.6,
                   ),
                   _buildSightCard(
-                    'images/palakkad4.png',
-                    'Parambikulam Tiger Reserve',
-                    'Parambikulam Tiger Reserve is a wildlife sanctuary known for its rich biodiversity and tiger population.',
+                    'images/kannur4.png',
+                    'Parassinikadavu Muthappan Temple',
+                    'Parassinikadavu Muthappan Temple is a Hindu temple known for its Theyyam rituals.',
                     4.4,
                   ),
                 ],
@@ -114,21 +115,21 @@ class PalakkadPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   children: [
                     _buildFoodSpotCard(
-                      'images/pala1.png',
-                      'Hotel Dhe Puttu',
-                      'Description of Hotel Dhe Puttu',
+                      'images/kan1.png',
+                      'Odyssey Sea View Restaurant',
+                      'Description of Odyssey Sea View Restaurant',
                       4.5,
                     ),
                     _buildFoodSpotCard(
-                      'images/pala2.png',
-                      'Hotel Royal Treat',
-                      'Description of Hotel Royal Treat',
+                      'images/kan2.png',
+                      'Royal Omars',
+                      'Description of Royal Omars',
                       4.2,
                     ),
                     _buildFoodSpotCard(
-                      'images/pala3.png',
-                      'Hotel Sree Chakra',
-                      'Description of Hotel Sree Chakra',
+                      'images/kan3.png',
+                      'Hotel Blue Nile',
+                      'Description of Hotel Blue Nile',
                       4.8,
                     ),
                   ],
