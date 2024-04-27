@@ -9,6 +9,7 @@ import 'package:wander05_final/Districts/Idukki/idukki.dart';
 import 'package:wander05_final/Districts/Kollam/kollam.dart';
 import 'package:wander05_final/Districts/Kottayam/kottayam.dart';
 import 'package:wander05_final/Districts/Pathanamthitta/pathanamthitta.dart';
+import 'package:wander05_final/Districts/Thrissur/thrissur.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/UserProfilePage.dart';
 import 'package:wander05_final/firebase_options.dart';
@@ -467,6 +468,8 @@ class DistrictSearch extends SearchDelegate<String> {
         return ErnakulamPage();
       case 'Idukki':
         return IdukkiPage();
+      case 'Thrissur':
+        return ThrissurPage();  
       default:
         return Container();
     }
