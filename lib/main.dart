@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/UserProfilePage.dart';
+import 'package:wander05_final/budget.dart';
 import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
 import 'package:wander05_final/itinerary.dart';
@@ -12,6 +13,7 @@ import 'package:wander05_final/landing.dart';
 import 'package:wander05_final/loader.dart';
 import 'package:wander05_final/login.dart';
 import 'package:wander05_final/Disaster_Alert/disaster.dart';
+import 'package:wander05_final/myplans.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -353,6 +355,16 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(builder: (context) => UserProfilePage()),
       );
+    }
+    else if (index == 1){
+      Navigator.push(
+  context,
+  MaterialPageRoute(
+      builder: (context) => MyTripsPage(
+    ),
+  ),
+);
+
     }
   },
 ),

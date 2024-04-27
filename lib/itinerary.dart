@@ -41,12 +41,12 @@ class Itinerary extends StatefulWidget {
 }
 
 class _ItineraryState extends State<Itinerary> {
-  String result = '';
+  String result = 'No PLans';
   String _typingText = '';
   String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "api key ";
+  final String apiKey = "sk-proj-nXOb2EGuiEuylly96HABT3BlbkFJpaIANMRR4QPkB9nLJ5Ex";
 
   Future<void> fetchResponse(
     String startplace,
@@ -171,34 +171,70 @@ Widget build(BuildContext context) {
                     ),
                   ),
                   // Save Plan button with animation
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        // onPressed callback logic for saving the plan
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green, // Button color
-                        onPrimary: Colors.white, // Text color
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10), // Rounded corners
-                        ),
-                        elevation: 3, // Button elevation
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.save),
-                          SizedBox(width: 8),
-                          Text(
-                            'Save\nPlan',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Save Plan button with animation
+AnimatedContainer(
+  duration: Duration(milliseconds: 500),
+  curve: Curves.easeInOut,
+  child: ElevatedButton(
+    onPressed: () async {
+      try {
+        // Get the current user
+        User? user = FirebaseAuth.instance.currentUser;
+
+        if (user != null) {
+          // Reference to the user's itinerary collection
+          CollectionReference itineraryCollectionRef = FirebaseFirestore.instance.collection('itinerary').doc(user.uid).collection('plans');
+
+          // Save the plan to Firestore with a unique document ID
+          await itineraryCollectionRef.add({
+            'plan': result,
+            'timestamp': FieldValue.serverTimestamp(),
+            'startplace': widget.startplace,
+            'destination': widget.destinationCountry,
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Plan saved successfully!'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        } else {
+          throw Exception('User is not authenticated.');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save plan. Please try again.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        print('Error saving plan: $e');
+      }
+    },
+    style: ElevatedButton.styleFrom(
+      primary: Colors.green, // Button color
+      onPrimary: Colors.white, // Text color
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10), // Rounded corners
+      ),
+      elevation: 3, // Button elevation
+    ),
+    child: Row(
+      children: [
+        Icon(Icons.save),
+        SizedBox(width: 8),
+        Text(
+          'Save\nPlan',
+          style: TextStyle(fontSize: 18),
+        ),
+      ],
+    ),
+  ),
+),
+
+
                 ],
               ),
               SizedBox(height: 20),
@@ -334,4 +370,5 @@ void _showDetailedPlan(BuildContext context, String activityContent) {
     },
   );
 }
+
 }

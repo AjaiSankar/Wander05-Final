@@ -1,111 +1,113 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserProfilePage extends StatefulWidget {
-  @override
-  _UserProfilePageState createState() => _UserProfilePageState();
-}
-
-class _UserProfilePageState extends State<UserProfilePage> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  TextEditingController _interestController = TextEditingController();
-
-  bool _isEditing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-  }
-
-  // Function to fetch user data
-  void _fetchUserData() async {
-    // Fetch user data from Firestore
-  }
-
-  // Function to update user profile information
-  void _updateUserProfile() async {
-    // Update user profile in Firestore
-  }
-
+class UserProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('User Profile'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _isEditing = !_isEditing; // Toggle editing mode
-              });
-            },
-            icon: Icon(_isEditing ? Icons.save : Icons.edit),
-          ),
-        ],
+        backgroundColor: Colors.blue, // You can customize the color scheme
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20.0),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            // Profile picture
+          children: [
             CircleAvatar(
-              radius: 80,
-              backgroundColor: Colors.grey[200],
-              backgroundImage: NetworkImage(
-                _auth.currentUser?.photoURL ??
-                    'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+              radius: 60,
+              backgroundImage: AssetImage('assets/user_profile_picture.jpg'), // You can replace this with actual user profile picture
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Username',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Location: City, Country', // User's location
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
               ),
             ),
             SizedBox(height: 20),
-            // Name, Place, Email, Phone
             Text(
-              _auth.currentUser?.displayName ?? 'No Name',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Bio:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 10),
             Text(
-              _auth.currentUser?.email ?? 'No Email',
-              style: TextStyle(fontSize: 18),
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget nulla vitae felis convallis tempus. Donec varius eros nec metus semper, a tempor libero vehicula.', // User's bio
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Upcoming Trips:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            // Display user's upcoming trips
+            TripCard(
+              destination: 'New York',
+              date: 'May 2024',
+            ),
+            TripCard(
+              destination: 'Paris',
+              date: 'June 2024',
+            ),
+            // Add more TripCard widgets for each upcoming trip
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TripCard extends StatelessWidget {
+  final String destination;
+  final String date;
+
+  TripCard({
+    required this.destination,
+    required this.date,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Destination: $destination',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 10),
             Text(
-              'Place: Your place',
-              style: TextStyle(fontSize: 18),
+              'Date: $date',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
             ),
-            SizedBox(height: 10),
-            Text(
-              'Phone: Your phone number',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 20),
-            // Travel Interests
-            _isEditing
-                ? TextFormField(
-                    controller: _interestController,
-                    decoration: InputDecoration(labelText: 'Add Interests'),
-                  )
-                : Text(
-                    'Interests: Your interests',
-                    style: TextStyle(fontSize: 18),
-                  ),
-            SizedBox(height: 20),
-            // Pictures of visited places
-            Text(
-              'Pictures of Visited Places',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            // Display pictures of visited places (to be implemented)
-            SizedBox(height: 20),
-            // Plans created on the app
-            Text(
-              'Plans Created',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            // Display plans created on the app (to be implemented)
           ],
         ),
       ),
