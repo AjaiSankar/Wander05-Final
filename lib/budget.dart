@@ -1,107 +1,150 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
-class BudgetManagementPage extends StatefulWidget {
-  final String tripId;
-
-  const BudgetManagementPage({Key? key, required this.tripId}) : super(key: key);
-
+class BudgetTrackerPage extends StatefulWidget {
   @override
-  _BudgetManagementPageState createState() => _BudgetManagementPageState();
+  _BudgetTrackerPageState createState() => _BudgetTrackerPageState();
 }
 
-class _BudgetManagementPageState extends State<BudgetManagementPage> {
-  late TextEditingController _budgetController;
-  late TextEditingController _expenseController;
+class _BudgetTrackerPageState extends State<BudgetTrackerPage> {
+  final _formKey = GlobalKey<FormState>();
+  double totalBudget = 0;
+  double remainingBalance = 0;
+
+  Future<void> getItineraryData() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final docRef = FirebaseFirestore.instance.collection('itinerary').doc(uid).collection('budget').doc('budget');
+    final docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) {
+      final data = docSnapshot.data();
+      setState(() {
+        totalBudget = data?['totalBudget'] ?? 0.0;
+        remainingBalance = data?['remainingBalance'] ?? totalBudget;
+      });
+    }
+  }
+
+  Future<void> setBudget(double budget) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final docRef = FirebaseFirestore.instance.collection('itinerary').doc(uid).collection('budget').doc('budget');
+    await docRef.set({
+      'totalBudget': budget,
+      'remainingBalance': budget,
+    });
+  }
+
+  Future<void> addExpense(double amount) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final docRef = FirebaseFirestore.instance.collection('itinerary').doc(uid).collection('budget').doc('budget');
+
+    await docRef.update({
+      'remainingBalance': remainingBalance - amount,
+    });
+
+    setState(() {
+      remainingBalance -= amount;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _budgetController = TextEditingController();
-    _expenseController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _budgetController.dispose();
-    _expenseController.dispose();
-    super.dispose();
+    getItineraryData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Budget Management'),
+        title: Text('Budget Tracker'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Trip Budget',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Form(
+              key: _formKey,
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Total Budget',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a budget';
+                  }
+                  return null;
+                },
+                onSaved: (newValue) => totalBudget = double.parse(newValue!),
+              ),
             ),
-            TextFormField(
-              controller: _budgetController,
-              decoration: InputDecoration(labelText: 'Enter Budget'),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Track Expenses',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            TextFormField(
-              controller: _expenseController,
-              decoration: InputDecoration(labelText: 'Enter Expense'),
-            ),
-            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Update budget in Firestore
-                _updateBudget();
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  setBudget(totalBudget);
+                  getItineraryData();
+                }
               },
-              child: Text('Update Budget'),
+              child: Text('Set Budget'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Total Budget: \$' + totalBudget.toStringAsFixed(2),
+              style: TextStyle(fontSize: 18),
+            ),
+            Text(
+              'Remaining Balance: \$' + remainingBalance.toStringAsFixed(2),
+              style: TextStyle(fontSize: 18),
+            ),
+            // Add expense section (implement your UI and functionality here)
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Add Expense'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(labelText: 'Expense Amount'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter an amount';
+                              }
+                              return null;
+                            },
+                            onSaved: (newValue) {
+                              double amount = double.parse(newValue!);
+                              addExpense(amount);
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: Text('Add'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Text('Add Expense'),
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _updateBudget() async {
-    try {
-      String userId = FirebaseAuth.instance.currentUser!.uid;
-
-      // Reference to the user's trip document
-      DocumentReference tripDocRef = FirebaseFirestore.instance
-          .collection('itinerary')
-          .doc(userId)
-          .collection('trips')
-          .doc(widget.tripId);
-
-      // Update budget in Firestore
-      await tripDocRef.update({
-        'budget': _budgetController.text,
-        'expenses': FieldValue.arrayUnion([_expenseController.text]),
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Budget updated successfully!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to update budget. Please try again.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      print('Error updating budget: $e');
-    }
   }
 }

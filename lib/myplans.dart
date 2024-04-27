@@ -92,7 +92,7 @@ class MyTripsPage extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BudgetManagementPage(tripId: tripId),
+        builder: (context) => BudgetTrackerPage(),
       ),
     );
   },
