@@ -47,7 +47,7 @@ class Itinerary extends StatefulWidget {
 
 class _ItineraryState extends State<Itinerary> {
   
-  LatLng initialCenter = LatLng(9.850, 76.271); // Default initial center
+  LatLng initialCenter = const LatLng(9.850, 76.271); // Default initial center
   double currentZoom = 9.0;
   String result = '';
   String _typingText = '';
@@ -122,7 +122,7 @@ class _ItineraryState extends State<Itinerary> {
       appBar: AppBar(
         title: Text(
           widget.destinationCountry,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 22,
@@ -160,16 +160,16 @@ class _ItineraryState extends State<Itinerary> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue, // Button color
                           foregroundColor: Colors.white, // Text color
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                         ),
                         child: Text(
                           _typingText.isEmpty ? 'Regenerate Itinerary' : '$_typingText...',
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ),
                       // Save Plan button with animation
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                         child: ElevatedButton(
                           onPressed: () {
@@ -179,9 +179,9 @@ class _ItineraryState extends State<Itinerary> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue, // Button color
                             foregroundColor: Colors.white, // Text color
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                           ),
-                          child: Row(
+                          child: const Row(
                             children: [
                               Icon(Icons.save),
                               SizedBox(width: 8),
@@ -195,7 +195,7 @@ class _ItineraryState extends State<Itinerary> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildItinerary(),
                  
                 ],
@@ -211,9 +211,9 @@ class _ItineraryState extends State<Itinerary> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue, // Button color
                 foregroundColor: Colors.white, // Text color
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
               ),
-              child: Text(
+              child: const Text(
                 'Show in Map',
                 style: TextStyle(fontSize: 18),
               ),
@@ -224,12 +224,12 @@ class _ItineraryState extends State<Itinerary> {
       ),
       bottomNavigationBar: ConvexAppBar(
         backgroundColor: const Color.fromARGB(255, 12, 84, 193),
-        items: [
-          const TabItem(icon: Icons.home, title: 'Home'),
-          const TabItem(icon: Icons.map, title: 'My Trips'),
-          const TabItem(icon: Icons.add, title: 'New Trip'),
-          const TabItem(icon: Icons.hotel, title: 'Bookings'),
-          const TabItem(icon: Icons.people, title: 'Profile'),
+        items: const [
+          TabItem(icon: Icons.home, title: 'Home'),
+          TabItem(icon: Icons.map, title: 'My Trips'),
+          TabItem(icon: Icons.add, title: 'New Trip'),
+          TabItem(icon: Icons.hotel, title: 'Bookings'),
+          TabItem(icon: Icons.people, title: 'Profile'),
         ],
         onTap: (int i) => print('click index=$i'),
       ),
@@ -273,17 +273,18 @@ class _ItineraryState extends State<Itinerary> {
   }
 
   Widget _buildHotelsCarousel() {
-  return SizedBox(
-    height: 300, // Set a specific height
-    child: HotelPage(),
-  );
-}
+    return SizedBox(
+      height: 520,
+      width: double.infinity, // Set a specific height
+      child: HotelPage(destinationCountry: widget.destinationCountry),
+    );
+  }
 
 
 
   Widget _buildItinerary() {
     if (result.isEmpty) {
-      return Center(child: Text("No itinerary generated yet"));
+      return const Center(child: Text("No itinerary generated yet"));
     }
 
     List<String> days = result.split('Day ');
@@ -303,7 +304,7 @@ class _ItineraryState extends State<Itinerary> {
     List<String> activities = sections.sublist(1);
 
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 3,
       color: Colors.blue.shade50,
       child: ExpansionTile(
@@ -329,16 +330,16 @@ class _ItineraryState extends State<Itinerary> {
         _showDetailedPlan(context, activityContent);
       },
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: isLastActivity ? null : Border(bottom: BorderSide(color: Colors.grey)),
+          border: isLastActivity ? null : const Border(bottom: BorderSide(color: Colors.grey)),
         ),
         child: Text(
           activityContent,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: const Color.fromARGB(255, 9, 11, 13),
+            color: Color.fromARGB(255, 9, 11, 13),
           ),
           textAlign: TextAlign.left,
         ),
@@ -351,14 +352,14 @@ class _ItineraryState extends State<Itinerary> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Detailed Plan'),
+          title: const Text('Detailed Plan'),
           content: Text(activityContent),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -379,7 +380,7 @@ class _ItineraryState extends State<Itinerary> {
               options: MapOptions(
                 initialCenter: initialCenter,
                 initialZoom: currentZoom,
-                interactionOptions: InteractionOptions(
+                interactionOptions: const InteractionOptions(
                   enableScrollWheel: true,
                 ),
               ),
@@ -387,7 +388,7 @@ class _ItineraryState extends State<Itinerary> {
                 TileLayer(
                   urlTemplate:
                       'https://api.mapbox.com/styles/v1/vivekunni/clv9da5t200bw01o081rx6qts/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoidml2ZWt1bm5pIiwiYSI6ImNsdjNrY29hbTB1bTUyanJ5MjZ1NmFtcXkifQ.9q187S7ZwqH6hKF8GkILXQ',
-                  additionalOptions: {
+                  additionalOptions: const {
                     'accessToken':
                         'pk.eyJ1Ijoidml2ZWt1bm5pIiwiYSI6ImNsdjNrY29hbTB1bTUyanJ5MjZ1NmFtcXkifQ.9q187S7ZwqH6hKF8GkILXQ',
                     'id': 'mapbox://styles/vivekunni/clv9da5t200bw01o081rx6qts'
@@ -408,7 +409,7 @@ class _ItineraryState extends State<Itinerary> {
                     Marker(
                       width: 50.0,
                       height: 50.0,
-                      point: LatLng(11.850, 76.271),
+                      point: const LatLng(11.850, 76.271),
                       child: Container(
                         child: Image.asset(
                           "assets/R.png",
@@ -418,7 +419,7 @@ class _ItineraryState extends State<Itinerary> {
                     Marker(
                       width: 50.0,
                       height: 50.0,
-                      point: LatLng(9.850, 76.271),
+                      point: const LatLng(9.850, 76.271),
                       child: Container(
                         child: Image.asset(
                           "assets/R.png",
@@ -435,13 +436,13 @@ class _ItineraryState extends State<Itinerary> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Navigate"),
+              child: const Text("Navigate"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Close"),
+              child: const Text("Close"),
             ),
           ],
         );

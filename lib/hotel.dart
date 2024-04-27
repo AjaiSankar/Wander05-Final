@@ -6,6 +6,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart'; // import the url_launcher package
 
 class HotelPage extends StatefulWidget {
+  final String destinationCountry;
+
+  HotelPage({required this.destinationCountry});
+
   @override
   _HotelPageState createState() => _HotelPageState();
 }
@@ -20,7 +24,12 @@ class _HotelPageState extends State<HotelPage> {
   }
 
   Future<void> loadHotelsFromAssets() async {
-    final jsonString = await rootBundle.loadString('assets/csvjson.json');
+    final String fileName = '${widget.destinationCountry.toLowerCase()}.json';
+    print(fileName);
+    print(fileName);
+    print(fileName);
+    print(fileName);
+    final jsonString = await rootBundle.loadString('assets/hotels/$fileName');
     final List<dynamic> jsonData = jsonDecode(jsonString);
     setState(() {
       hotels = jsonData.map((data) => data as Map<String, dynamic>).toList();
@@ -30,30 +39,50 @@ class _HotelPageState extends State<HotelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hotels in Kochi'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(0), // Hide the original AppBar
+        child: Container(), // Empty container to occupy the space
       ),
-      body: hotels.isNotEmpty
-          ? CarouselSlider.builder(
-              itemCount: hotels.length,
-              options: CarouselOptions(
-                aspectRatio: 16 / 15,
-                autoPlay: true,
-                autoPlayInterval: const Duration(seconds: 5),
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                autoPlayCurve: Curves.fastOutSlowIn,
-                pauseAutoPlayOnTouch: true,
-                enlargeCenterPage: false,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0), // Adjust vertical padding
+            child: Text(
+              'Hotels in ${widget.destinationCountry}',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 17.5, // Adjust font size as needed
+                fontWeight: FontWeight.bold, // Add fontWeight if needed
+                // Add more styling properties as needed
               ),
-              itemBuilder: (context, index, _) {
-                return HotelCard(hotel: hotels[index]);
-              },
-            )
-          : const Center(
-              child: CircularProgressIndicator(),
             ),
+          ),
+          hotels.isNotEmpty
+              ? CarouselSlider.builder(
+                  itemCount: hotels.length,
+                  options: CarouselOptions(
+                    aspectRatio: 16 / 12,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 5),
+                    autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    pauseAutoPlayOnTouch: true,
+                    enlargeCenterPage: false,
+                    viewportFraction: 0.45,
+                  ),
+                  itemBuilder: (context, index, _) {
+                    return HotelCard(hotel: hotels[index]);
+                  },
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                ),
+        ],
+      ),
     );
   }
+
 }
 
 class HotelCard extends StatelessWidget {

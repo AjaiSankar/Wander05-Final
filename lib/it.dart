@@ -28,7 +28,7 @@ class _TripPreferencesPageState extends State<TripPreferencesPage> {
   List<String> cuisineTypes = ['Traditional', 'International', 'Vegetarian', 'Vegan'];
   
   List<String> keralaDistricts = [
-    'Thiruvananthapuram',
+    'Trivandrum',
     'Kollam',
     'Pathanamthitta',
     'Alappuzha',
