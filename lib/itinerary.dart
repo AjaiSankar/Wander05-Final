@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -39,7 +41,8 @@ class Itinerary extends StatefulWidget {
 
   @override
   State<Itinerary> createState() => _ItineraryState();
-  
+
+  void fetchResponse() {}
 }
 
 class _ItineraryState extends State<Itinerary> {
@@ -48,6 +51,7 @@ class _ItineraryState extends State<Itinerary> {
   double currentZoom = 9.0;
   String result = '';
   String _typingText = '';
+  String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
   final String apiKey = "API KEY HERE";
@@ -68,7 +72,8 @@ class _ItineraryState extends State<Itinerary> {
     String tripDuration,
   ) async {
     setState(() {
-      _typingText = 'Generating itinerary';
+      _typingText = 'Generating\nitinerary';
+      _typingText1 = 'Creating your plan..';
     });
 
     final response = await http.post(
@@ -87,8 +92,7 @@ class _ItineraryState extends State<Itinerary> {
           {
             "role": "user",
             "content":
-                "Generate a personalized travel itinerary for a trip to $destinationCountry starting from $startplace with a budget of $budget. The traveler is interested in a $travelStyle vacation and enjoys $interestsNew. They are looking for $accommodationType accommodations and prefer $transportationType transportation. The itinerary should include $activityType activities and $cuisineType dining options. Please provide a detailed itinerary with daily recommendations for $tripDuration days, including suggested destinations, activities, and dining options. Give names for each accommodation and food spots to take food. Also make sure that the places and path chosen from $startplace to $destinationCountry is optimal such that choose places on the path from $startplace to $destinationCountry also. The format for the plan should be as follows: Day(Activity/Travel), Morning Activity(this should be the subheading), Afternoon Activity(this should be the subheading), Evening Activity",
-          }
+            "Generate a personalized travel itinerary for a trip from $startplace to $destinationCountry, considering a budget of ₹$budget. Ensure that the trip stays within the specified budget. The traveler prefers a $travelStyle vacation and enjoys $interestsNew. They seek $accommodationType accommodations and prefer $transportationType transportation. The itinerary should span $tripDuration days, featuring a mix of activities and dining options. For each day of the trip, provide detailed recommendations with morning, afternoon, and evening activities, along with their approximate costs. Include suggested destinations, activities, and dining spots. Ensure that the chosen path from $startplace to $destinationCountry is optimal, incorporating attractions along the route. Format the itinerary consistently as follows: Day X (Activity/Travel): Morning Activity: Cost: ₹ Afternoon Activity: Cost: ₹ Evening Activity: Cost: ₹. At the end of the itinerary, provide a list of all mentioned places along with their respective latitude and longitude coordinates for navigation purposes, ensuring they are listed in the correct order from the start to the destination along the optimal path. Estimated Total Cost: ₹. Approximate Costs: Accommodation: ₹ Transportation: ₹,Activities: ₹ per activity Dining: ₹ per meal. MAke sure to print latitude and longitude of all mention places and destinations"}
         ],
       }),
     );

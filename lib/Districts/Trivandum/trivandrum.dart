@@ -204,11 +204,11 @@ class TrivandrumPage extends StatelessWidget {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 children: [
-                  _buildSightCard('images/tvm/tvm2.jpg', 'Trivadnrum Zoo', 'Short description of sight 1', 4.5),
-                  _buildSightCard('images/tvm/tvm3.jpg', 'Museum', 'Short description of sight 2', 4.2),
-                  _buildSightCard('images/tvm/tvm4.jpg', 'Sree Padmanabha Temple', 'Short description of sight 3', 4.8),
-                  _buildSightCard('images/tvm/tvm5.jpg', 'Varkala', 'Short description of sight 4', 4.4),
-                  _buildSightCard('images/tvm/tvm6.jpg', 'Kovalam Beach', 'Short description of sight 5', 4.6),
+                  _buildSightCard('images/tvm2.jpg', 'Trivadnrum Zoo', 'Short description of sight 1', 4.5),
+                  _buildSightCard('images/tvm3.jpg', 'Museum', 'Short description of sight 2', 4.2),
+                  _buildSightCard('images/tvm4.jpg', 'Sree Padmanabha Temple', 'Short description of sight 3', 4.8),
+                  _buildSightCard('images/tvm5.jpg', 'Varkala', 'Short description of sight 4', 4.4),
+                  _buildSightCard('images/tvm6.jpg', 'Kovalam Beach', 'Short description of sight 5', 4.6),
                 ],
               ),
 
@@ -319,9 +319,6 @@ class TrivandrumPage extends StatelessWidget {
   selectedItemColor: Colors.white,
   unselectedItemColor: Colors.grey[400],
   currentIndex: _selectedIndex,
-  onTap: (index) {
-    _onItemTapped(context, index);
-  },
   items: [
     BottomNavigationBarItem(
       icon: Icon(Icons.dashboard),
@@ -336,6 +333,25 @@ class TrivandrumPage extends StatelessWidget {
       label: 'Hotels',
     ),
   ],
+  onTap: (int index) {
+          switch (index) {
+            case 0:
+              // Navigate to Overview screen
+              // Add your navigation logic here
+              break;
+            case 1:
+              // Navigate to tvmexplore.dart
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ExploreTrivandrumPage()),
+              );
+              break;
+            case 2:
+              // Navigate to Hotels screen
+              // Add your navigation logic here
+              break;
+          }
+        },
 ),
 
     );

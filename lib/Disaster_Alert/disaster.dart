@@ -1,174 +1,500 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
-class DisasterPage extends StatefulWidget {
-  @override
-  _DisasterPageState createState() => _DisasterPageState();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeNotifications();
 }
 
-class _DisasterPageState extends State<DisasterPage> {
+Future<void> initializeNotifications() async {
+  final AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+
+class DisasterReportPage extends StatefulWidget {
+  @override
+  _DisasterReportPageState createState() => _DisasterReportPageState();
+}
+
+class _DisasterReportPageState extends State<DisasterReportPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String selectedDistrict = "Kottayam";
-  String selectedDisasterType = "Flood";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
+  final DateFormat _timeFormat = DateFormat('HH:mm');
+
+  String selectedDistrict = 'Kottayam';
+  String selectedDisasterType = 'Flood'; // Default selected disaster type
+
+  List<String> districts = [
+    'Alappuzha',
+    'Ernakulam',
+    'Idukki',
+    'Kannur',
+    'Kasaragod',
+    'Kollam',
+    'Kottayam',
+    'Kozhikode',
+    'Malappuram',
+    'Palakkad',
+    'Pathanamthitta',
+    'Thiruvananthapuram',
+    'Thrissur',
+    'Wayanad'
+  ];
+
+  List<String> disasterTypes = ['Flood', 'Earthquake', 'Landslide'];
+
+  TextEditingController severityController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Disaster Alert'),
+        title: Text('Disaster Report'),
       ),
-      body: StreamBuilder(
-        stream: _firestore.collectionGroup('disaster_reports').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot alert = snapshot.data!.docs[index];
-              // Check if fields exist and parse values
-              int floodCount = alert['flood'] != null ? int.tryParse(alert['flood']) ?? 0 : 0;
-              int earthquakeCount = alert['earthquake'] != null ? int.tryParse(alert['earthquake']) ?? 0 : 0;
-              int landslideCount = alert['landslide'] != null ? int.tryParse(alert['landslide']) ?? 0 : 0;
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Recent Disaster Reports',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue[900],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: selectedDistrict,
+                onChanged: (value) {
+                  setState(() {
+                    selectedDistrict = value!;
+                  });
+                },
+                items: districts.map((district) {
+                  return DropdownMenuItem(
+                    child: Text(district),
+                    value: district,
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Select District',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: selectedDisasterType,
+                onChanged: (value) {
+                  setState(() {
+                    selectedDisasterType = value!;
+                  });
+                },
+                items: disasterTypes.map((type) {
+                  return DropdownMenuItem(
+                    child: Text(type),
+                    value: type,
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Select Disaster Type',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 20),
 
-              // Check if any disaster count is more than 5
-              bool showDisaster = false;
-              if (floodCount > 5 || earthquakeCount > 5 || landslideCount > 5) {
-                showDisaster = true;
-              }
-              return showDisaster
-                  ? _buildDisasterCard(alert)
-                  : SizedBox.shrink();
+StreamBuilder<QuerySnapshot>(
+  stream: _firestore
+      .collection('disaster_reports')
+      .doc(selectedDistrict)
+      .collection(selectedDisasterType.toLowerCase())
+      .snapshots(),
+  builder: (context, snapshot) {
+    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      // If no data or no reports available, display a message
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.sentiment_very_satisfied, // Large happy symbol
+              size: 80,
+              color: Colors.green,
+            ),
+            SizedBox(height: 10),
+            Text(
+              'No reports of disasters yet',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    final reports = snapshot.data!.docs;
+    int totalReports = reports.length; // Count the total number of reports   
+  if (totalReports > 5) {
+  showNotification();
+     }
+    List<Widget> disasterList = [];
+    final currentUserEmail = _auth.currentUser?.email;
+    for (var report in reports) {
+      final reportData = report.data() as Map<String, dynamic>;
+      int severity = reportData['severity'] ?? 0;
+      Color cardColor = _getColorBySeverity(severity);
+      final reportedByEmail = reportData['userEmail'];
+      disasterList.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row( // Use Row to layout the card and the count
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reported by: $reportedByEmail',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Reported at: ${_dateFormat.format(DateTime.parse(reportData['timestamp']))} ${_timeFormat.format(DateTime.parse(reportData['timestamp']))}',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Severity: $severity',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        if (reportedByEmail == currentUserEmail)
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              showConfirmationDialog(report.reference.id, reportedByEmail);
+                            },
+                            icon: Icon(Icons.edit),
+                            label: Text('Withdraw'),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Text(
+                  '$totalReports', // Display the total count here
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: disasterList,
+    );
+  },
+),
+
+
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Show the reporting form in a pop-up
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Report Disaster'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: severityController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Severity',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the dialog
+                    },
+                    child: Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the dialog
+                      reportDisaster(); // Report disaster
+                    },
+                    child: Text('Report'),
+                  ),
+                ],
+              );
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _reportDisaster,
         tooltip: 'Report Disaster',
         child: Icon(Icons.add),
       ),
     );
   }
 
-  Widget _buildDisasterCard(DocumentSnapshot alert) {
-    return Card(
-      margin: EdgeInsets.all(8.0),
-      child: ListTile(
-        title: Text('Disaster Alert'),
-        subtitle: Text('${alert.id}'),
-      ),
-    );
+  Color _getColorBySeverity(int severity) {
+    if (severity >= 0 && severity <= 1) {
+      return Colors.green;
+    } else if (severity >= 2 && severity <= 3) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
+    }
   }
 
-  void _reportDisaster() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Report Disaster'),
-          content: Container(
-            height: 200.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DropdownButtonFormField<String>(
-                  value: selectedDistrict,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedDistrict = value!;
-                    });
-                  },
-                  items: <String>[
-                    'Thiruvananthapuram',
-                    'Kollam',
-                    'Pathanamthitta',
-                    'Alappuzha',
-                    'Kottayam',
-                    'Idukki',
-                    'Ernakulam',
-                    'Thrissur',
-                    'Palakkad',
-                    'Malappuram',
-                    'Kozhikode',
-                    'Wayanad',
-                    'Kannur',
-                    'Kasaragod',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                DropdownButtonFormField<String>(
-                  value: selectedDisasterType,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedDisasterType = value!;
-                    });
-                  },
-                  items: <String>[
-                    'Select Disaster Type',
-                    'Flood',
-                    'Earthquake',
-                    'Landslide',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                // Add optional picture upload option here
-              ],
-            ),
+  void reportDisaster() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final severity = int.tryParse(severityController.text) ?? 0;
+      if (severity > 0) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Confirm Report'),
+            content: Text('Are you sure you want to report this disaster?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                  // Proceed with reporting the disaster
+                  _submitReport(user, severity);
+                },
+                child: Text('Confirm'),
+              ),
+            ],
           ),
-          actions: <Widget>[
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Invalid Severity'),
+            content: Text('Please enter a valid severity value.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      // User is not authenticated
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Authentication Required'),
+          content: Text('You need to sign in to report a disaster.'),
+          actions: [
             TextButton(
-              child: Text('Report'),
               onPressed: () {
-                // Handle disaster reporting
-                _reportToFirestore(selectedDistrict, selectedDisasterType);
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-            ),
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              child: Text('OK'),
             ),
           ],
-        );
-      },
-    );
-  }
-
-  void _reportToFirestore(String district, String disasterType) async {
-    try {
-      await _firestore
-          .collection('disaster_reports')
-          .doc(district)
-          .update({disasterType: FieldValue.increment(1)});
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Disaster reported successfully!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-          duration: Duration(seconds: 2),
         ),
       );
     }
   }
+
+  void _submitReport(User? user, int severity) async {
+    final userReportRef = _firestore
+        .collection('user_reports')
+        .doc(user!.uid)
+        .collection('reports')
+        .doc(selectedDistrict);
+
+    final userReportDoc = await userReportRef.get();
+    if (!userReportDoc.exists) {
+      await _firestore
+          .collection('disaster_reports')
+          .doc(selectedDistrict)
+          .collection(selectedDisasterType.toLowerCase())
+          .doc(user.uid) // Use user's UID as document ID to ensure one report per user per district
+          .set({
+        'timestamp': DateTime.now().toString(),
+        'severity': severity,
+        'userEmail': user.email,
+      });
+
+      await userReportRef.set({'reported': true});
+
+      severityController.clear();
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Already Reported'),
+          content: Text('You have already reported a disaster for this district.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  void showConfirmationDialog(String reportId, String reportedByEmail) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Update/Withdraw'),
+        content: Text('Are you sure you want to update/withdraw this report?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              updateOrWithdrawReport(reportId, reportedByEmail);
+              Navigator.pop(context);
+            },
+            child: Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void updateOrWithdrawReport(String reportId, String reportedByEmail) async {
+    final user = _auth.currentUser;
+    if (user != null && reportedByEmail == user.email) {
+      await _firestore
+          .collection('disaster_reports')
+          .doc(selectedDistrict)
+          .collection(selectedDisasterType.toLowerCase())
+          .doc(reportId)
+          .delete();
+
+      await _firestore
+          .collection('user_reports')
+          .doc(user.uid)
+          .collection('reports')
+          .doc(selectedDistrict)
+          .delete();
+    } else {
+      // User is not authenticated or does not have permission to delete this report
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Permission Denied'),
+          content: Text('You do not have permission to delete this report.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+void showNotification() async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'your_channel_id', // Change this to a unique channel ID
+    'Channel Name',
+    importance: Importance.max,
+    priority: Priority.high,
+  );
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    'Disaster Alert',
+    'The count of disasters has exceeded 5!',
+    platformChannelSpecifics,
+    payload: 'item x',
+  );
+}
+
 }
