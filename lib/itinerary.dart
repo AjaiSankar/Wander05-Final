@@ -11,6 +11,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wander05_final/hotel.dart';
 
 class Itinerary extends StatefulWidget {
@@ -54,7 +55,7 @@ class _ItineraryState extends State<Itinerary> {
   String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "API KEY HERE";
+  final String apiKey = "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";
   void initState() {
     super.initState();
     _getLocation();
@@ -446,17 +447,28 @@ class _ItineraryState extends State<Itinerary> {
                 },
               ),
               MarkerLayer(
-                markers: destinations
-                    .map((destination) => Marker(
-                          width: 50.0,
-                          height: 50.0,
-                          point: destination.values.first,
-                          child:Container(
-                            child: Image.asset("assets/R.png"),
-                          ),
-                        ))
-                    .toList(),
-                
+                markers: [
+                  // User's location marker
+                  Marker(
+                    width: 50.0,
+                    height: 50.0,
+                    point: initialCenter,
+                    child: Container(
+                      child: Image.asset(
+                        "assets/gps.png",
+                      ),
+                    ),
+                  ),
+                  // Destination markers
+                  ...destinations.map((destination) => Marker(
+                    width: 50.0,
+                    height: 50.0,
+                    point: destination.values.first,
+                    child: Container(
+                      child: Image.asset("assets/R.png"),
+                    ),
+                  )).toList(),
+                ],
               ),
             ],
           ),
@@ -464,14 +476,33 @@ class _ItineraryState extends State<Itinerary> {
         actions: <Widget>[
           TextButton(
             onPressed: () {
+              // Constructing Google Maps URL
+              String baseUrl = 'https://www.google.com/maps/dir/';
+List<String> waypoints = [];
+
+for (var dest in destinations) {
+  waypoints.add('${dest.values.first.latitude},${dest.values.first.longitude}');
+}
+
+String joinedWaypoints = waypoints.join('/');
+
+String finalUrl = baseUrl + joinedWaypoints;
+print("Google Maps URL: $finalUrl");
+launchUrl(Uri.parse(finalUrl));
+            },
+            child: Text("Navigate"),
+          ),
+          TextButton(
+            onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Close"),
+            child: Text("Close"),
           ),
         ],
       );
     },
   );
 }
+
 }
 
