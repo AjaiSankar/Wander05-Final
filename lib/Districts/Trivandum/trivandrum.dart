@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wander05_final/Districts/Trivandum/tvmexplore.dart';
 
 // Add a class to represent a user review
 class UserReview {
@@ -14,7 +15,7 @@ class UserReview {
 }
 
 class TrivandrumPage extends StatelessWidget {
-  final int _selectedIndex = 0;
+  int _selectedIndex = 0;
   // Assuming these are some sample user reviews
   final List<UserReview> userReviews = [
     UserReview(
@@ -30,11 +31,9 @@ class TrivandrumPage extends StatelessWidget {
     // Add more reviews as needed
   ];
 
-  TrivandrumPage({super.key});
-
   // Method to calculate the overview of total reviews
   Map<int, int> calculateReviewOverview() {
-    Map<int, int> overview = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
+    Map<int, int> overview = {5: 2, 4: 0, 3: 0, 2: 0, 1: 0};
     for (var review in userReviews) {
       overview[review.rating];
     }
@@ -48,11 +47,11 @@ class TrivandrumPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trivandrum Page'),
+        title: Text('Trivandrum Beauty'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -60,7 +59,7 @@ class TrivandrumPage extends StatelessWidget {
               Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
+                    padding: EdgeInsets.only(bottom: 16),
                     child: Container(
                       height: 200,
                       decoration: BoxDecoration(
@@ -68,7 +67,7 @@ class TrivandrumPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -76,17 +75,17 @@ class TrivandrumPage extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Trivandrum on your mind?',
+                                  Text(
+                                    'Trivandrum on your mind ?',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'Build, organize and maps\nout your best trip with WANDER05',
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Build, organize and map\nout your best trip with WANDER05',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -97,19 +96,19 @@ class TrivandrumPage extends StatelessWidget {
                                     onPressed: () {
                                       // Navigate to the planning page
                                     },
-                                    child: const Text('Start Planning'),
+                                    child: Text('Start Planning'),
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            SizedBox(width: 16),
                             Hero(
                               tag: 'trip_image',
                               child: Container(
                                 width: 150,
                                 height: 150,
                                 decoration: BoxDecoration(
-                                  image: const DecorationImage(
+                                  image: DecorationImage(
                                     image: AssetImage('images/tvm.jpg'),
                                     fit: BoxFit.cover,
                                   ),
@@ -124,17 +123,17 @@ class TrivandrumPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               // Container with Image and Text
               Container(
                 height: 300,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('images/tvm.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
-                child: const Stack(
+                child: Stack(
                   children: [
                     Positioned(
                       top: 220,
@@ -162,9 +161,9 @@ class TrivandrumPage extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               // Text widget with information
-              const Text(
+              Text(
                 'Trivandrum is the capital city of Kerala, a state in southwestern India. '
                 'It is known for its British colonial architecture and art galleries. '
                 'The city is also home to several beaches, including Kovalam Beach, '
@@ -176,7 +175,7 @@ class TrivandrumPage extends StatelessWidget {
                   fontFamily: 'Roboto',
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               // Row of speciality icons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -187,43 +186,43 @@ class TrivandrumPage extends StatelessWidget {
                   _buildSpecialityIcon(Icons.history, 'Culture'),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               // Text widget for top sights
-              const Text(
+              Text(
                 'Top Sights',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               // GridView for top sights
               GridView.count(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 children: [
-                  _buildSightCard('images/tvm/tvm2.jpg', 'Sight 1', 'Short description of sight 1', 4.5),
-                  _buildSightCard('images/tvm/tvm3.jpg', 'Sight 2', 'Short description of sight 2', 4.2),
-                  _buildSightCard('images/tvm/tvm4.jpg', 'Sight 3', 'Short description of sight 3', 4.8),
-                  _buildSightCard('images/tvm/tvm5.jpg', 'Sight 4', 'Short description of sight 4', 4.4),
-                  _buildSightCard('images/tvm/tvm6.jpg', 'Sight 5', 'Short description of sight 5', 4.6),
+                  _buildSightCard('images/tvm2.jpg', 'Trivadnrum Zoo', 'Short description of sight 1', 4.5),
+                  _buildSightCard('images/tvm3.jpg', 'Museum', 'Short description of sight 2', 4.2),
+                  _buildSightCard('images/tvm4.jpg', 'Sree Padmanabha Temple', 'Short description of sight 3', 4.8),
+                  _buildSightCard('images/tvm5.jpg', 'Varkala', 'Short description of sight 4', 4.4),
+                  _buildSightCard('images/tvm6.jpg', 'Kovalam Beach', 'Short description of sight 5', 4.6),
                 ],
               ),
 
               // Food Spots section
-              const SizedBox(height: 20),
-              const Text(
+              SizedBox(height: 20),
+              Text(
                 'Food Spots',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 10),
-              SizedBox(
+              SizedBox(height: 10),
+              Container(
                 height: 200, // Adjust the height as needed
                 child: ListView(
                   scrollDirection: Axis.horizontal,
@@ -252,15 +251,15 @@ class TrivandrumPage extends StatelessWidget {
               ),
 
               // Review section
-              const SizedBox(height: 20),
-              const Text(
+              SizedBox(height: 20),
+              Text(
                 'Reviews Overview',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: reviewOverview.entries.map((entry) {
@@ -271,20 +270,20 @@ class TrivandrumPage extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
-              const Text(
+              SizedBox(height: 20),
+              Text(
                 'User Reviews',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               // Display user reviews
               Column(
                 children: userReviews.map((review) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -292,16 +291,16 @@ class TrivandrumPage extends StatelessWidget {
                           backgroundImage: AssetImage(review.userImage),
                           radius: 20,
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Rating: ${review.rating}',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: 4),
                               Text(review.reviewText),
                             ],
                           ),
@@ -320,10 +319,7 @@ class TrivandrumPage extends StatelessWidget {
   selectedItemColor: Colors.white,
   unselectedItemColor: Colors.grey[400],
   currentIndex: _selectedIndex,
-  onTap: (index) {
-    _onItemTapped(context, index);
-  },
-  items: const [
+  items: [
     BottomNavigationBarItem(
       icon: Icon(Icons.dashboard),
       label: 'Overview',
@@ -337,6 +333,25 @@ class TrivandrumPage extends StatelessWidget {
       label: 'Hotels',
     ),
   ],
+  onTap: (int index) {
+          switch (index) {
+            case 0:
+              // Navigate to Overview screen
+              // Add your navigation logic here
+              break;
+            case 1:
+              // Navigate to tvmexplore.dart
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ExploreTrivandrumPage()),
+              );
+              break;
+            case 2:
+              // Navigate to Hotels screen
+              // Add your navigation logic here
+              break;
+          }
+        },
 ),
 
     );
@@ -358,7 +373,7 @@ class TrivandrumPage extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(label),
       ],
     );
@@ -372,41 +387,41 @@ class TrivandrumPage extends StatelessWidget {
           Expanded(
             flex: 2,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
               child: Image.asset(
                 imagePath,
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.star, color: Colors.yellow, size: 16),
-                    const SizedBox(width: 4),
+                    Icon(Icons.star, color: Colors.yellow, size: 16),
+                    SizedBox(width: 4),
                     Text(
                       rating.toString(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                       ),
                     ),
@@ -422,12 +437,12 @@ class TrivandrumPage extends StatelessWidget {
 
   Widget _buildFoodSpotCard(String imagePath, String name, String description, double rating) {
     return Card(
-      margin: const EdgeInsets.only(right: 10),
+      margin: EdgeInsets.only(right: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
             child: Image.asset(
               imagePath,
               width: 150, // Set the width of the image
@@ -436,31 +451,31 @@ class TrivandrumPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.star, color: Colors.yellow, size: 16),
-                    const SizedBox(width: 4),
+                    Icon(Icons.star, color: Colors.yellow, size: 16),
+                    SizedBox(width: 4),
                     Text(
                       rating.toString(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                       ),
                     ),

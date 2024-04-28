@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wander05_final/auth.dart';
 
+import 'auth.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
-
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -43,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Image.asset(
-                      'images/logo1.png', // Replace with your logo image path
+                      'assets/logo1.png', // Replace with your logo image path
                       height: 100, // Adjust the height as needed
                     ),
                   ),
@@ -52,7 +50,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Full Name',
                       icon: Icon(Icons.person, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -61,7 +59,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       icon: Icon(Icons.email, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -71,7 +69,7 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Password',
                       icon: Icon(Icons.lock, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                     obscureText: true,
                   ),
@@ -81,14 +79,14 @@ class _SignupPageState extends State<SignupPage> {
                     decoration: const InputDecoration(
                       labelText: 'Confirm Password',
                       icon: Icon(Icons.lock, color: Colors.white),
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                     obscureText: true,
                   ),
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      Auth authHandler = Auth();
+                      Auth authHandler = new Auth();
                       // Implement your user registration logic here
                       authHandler.handleSignUp(_emailController.text, _passwordController.text)
                       .then((user) {
@@ -96,7 +94,7 @@ class _SignupPageState extends State<SignupPage> {
                       }).catchError((e) => print(e));
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal, // Set the button color to teal
+                      primary: Colors.teal, // Set the button color to teal
                     ),
                     child: const Text('Sign Up'),
                   ),
@@ -107,5 +105,18 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
     );
+  }
+
+  void _signup() {
+    // Implement your user registration logic here
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    // TODO: Integrate with backend service for user registration.
+    // Validate input, create user account, and handle any errors.
+
+    // For simplicity, this example just prints the registration details.
+    print('Name: $name, Email: $email, Password: $password');
   }
 }
