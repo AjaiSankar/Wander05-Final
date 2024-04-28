@@ -176,42 +176,52 @@ AnimatedContainer(
   duration: Duration(milliseconds: 500),
   curve: Curves.easeInOut,
   child: ElevatedButton(
-    onPressed: () async {
-      try {
-        // Get the current user
-        User? user = FirebaseAuth.instance.currentUser;
+   onPressed: () async {
+  try {
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
 
-        if (user != null) {
-          // Reference to the user's itinerary collection
-          CollectionReference itineraryCollectionRef = FirebaseFirestore.instance.collection('itinerary').doc(user.uid).collection('plans');
+    if (user != null) {
+      // Reference to the user's itinerary collection
+      CollectionReference itineraryCollectionRef = FirebaseFirestore.instance.collection('itinerary').doc(user.uid).collection('plans');
 
-          // Save the plan to Firestore with a unique document ID
-          await itineraryCollectionRef.add({
-            'plan': result,
-            'timestamp': FieldValue.serverTimestamp(),
-            'startplace': widget.startplace,
-            'destination': widget.destinationCountry,
-          });
+      // Generate a unique document ID for the plan
+      var planDocumentRef = await itineraryCollectionRef.add({
+        'plan': result,
+        'timestamp': FieldValue.serverTimestamp(),
+        'startplace': widget.startplace,
+        'destination': widget.destinationCountry,
+      });
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Plan saved successfully!'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        } else {
-          throw Exception('User is not authenticated.');
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save plan. Please try again.'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        print('Error saving plan: $e');
-      }
-    },
+      // Reference to the budget collection within the plan document
+      CollectionReference budgetCollectionRef = planDocumentRef.collection('budget');
+      
+      // Save the budget to Firestore within the plan document
+      await budgetCollectionRef.add({
+        'budget': widget.budget,// Add your budget data here,
+        // Add other budget details if needed
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Plan saved successfully!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      throw Exception('User is not authenticated.');
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Failed to save plan. Please try again.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    print('Error saving plan: $e');
+  }
+},
+
     style: ElevatedButton.styleFrom(
       primary: Colors.green, // Button color
       onPrimary: Colors.white, // Text color

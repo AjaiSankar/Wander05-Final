@@ -80,6 +80,21 @@ class _HomePageState extends State<HomePage> {
     },
   ];
 
+  final List<Map<String, dynamic>> sunsets = [
+    {
+      'image': 'images/sun1.jpg',
+      'name': '',
+    },
+    {
+      'image': 'images/sun2.jpg',
+      'name': '',
+    },
+    {
+      'image': 'images/sun3.jpg',
+      'name': '',
+    },
+  ];
+
   List<String> districts = [
     'Thiruvananthapuram',
     'Kollam',
@@ -264,6 +279,25 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+             Container(
+              margin: EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Here you can dynamically generate cards for trip plans
+                  buildTripCard(
+                    title: 'Trip 1',
+                    description: 'Description of Trip 1',
+                    // Add more properties as needed
+                  ),
+                  buildTripCard(
+                    title: 'Trip 2',
+                    description: 'Description of Trip 2',
+                    // Add more properties as needed
+                  ),
+                  // Add more TripCard widgets as needed
+                ],
+              ),
+             ),
 
             const SizedBox(height: 40),
             const Padding(
@@ -332,9 +366,134 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+
+
+
+            const SizedBox(height: 40),
+            const Padding(
+              padding: EdgeInsets.only(left: 16.0),
+              child: Text(
+                'Beautiful Sunsets',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 20),
+            CarouselSlider.builder(
+              itemCount: weekendTrips.length,
+              options: CarouselOptions(
+                height: 200.0,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                aspectRatio: 16 / 9,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                viewportFraction: 0.8,
+              ),
+              itemBuilder: (BuildContext context, int index, int realIndex) {
+                return Stack(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: AssetImage(sunsets[index]['image']),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                weekendTrips[index]['name'],
+                                style: const TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle button press
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                ),
+                                child: Text('Explore'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/main7.jpg'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center, // Aligns children vertically centered
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      '',
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 100),
+                  const Text(
+                    '',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TripPreferencesPage()));
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 12, 84, 193)),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(vertical: 10, horizontal: 20)), // Adjust padding as needed
+                        minimumSize: MaterialStateProperty.all<Size>(const Size(150, 40)), // Adjust size as needed
+                      ),
+                      child: const Text(
+                        'Show More',
+                        style: TextStyle(
+                          fontSize: 18, // Adjust font size as needed
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
+
   bottomNavigationBar: ConvexAppBar(
   backgroundColor: const Color.fromARGB(255, 12, 84, 193),
   items: const [
@@ -370,7 +529,34 @@ class _HomePageState extends State<HomePage> {
 ),
 
     );
+    
   }
+  
+  Widget buildTripCard(String title, String description) {
+    return Card(
+      elevation: 3,
+      margin: EdgeInsets.only(bottom: 16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              description,
+              style: TextStyle(fontSize: 16),
+            ),
+            // Add more widgets to display additional information about the trip
+          ],
+        ),
+      ),
+    );
+  }
+  
 }
 
 class DistrictSearch extends SearchDelegate<String> {
@@ -448,6 +634,7 @@ class DistrictSearch extends SearchDelegate<String> {
         return TrivandrumPage();
       case 'Kollam':
         return TrivandrumPage();
+      
       default:
         return Container();
     }

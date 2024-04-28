@@ -87,14 +87,23 @@ class MyTripsPage extends StatelessWidget {
                                         child: ElevatedButton(
                                           onPressed: () {
     // Get the trip ID from the DocumentSnapshot
-    String tripId = plans[index].id; // Assuming the trip ID is the document ID
-    // Navigate to BudgetManagementPage when the button is pressed
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BudgetTrackerPage(),
-      ),
-    );
+    String? tripId = plans.isNotEmpty ? plans[index].id : null; // Assuming the trip ID is the document ID
+// if (tripId != null) {
+//   Navigator.push(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => BudgetTrackerPage(: tripId,),
+//     ),
+//   );
+// } else {
+//   // Handle the case when tripId is null, for example, display an error message
+//   ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(
+//       content: Text('Trip ID is not valid.'),
+//     ),
+//   );
+// }
+
   },
                                           style: ElevatedButton.styleFrom(
                                             primary: Color.fromARGB(255, 49, 51, 214),
