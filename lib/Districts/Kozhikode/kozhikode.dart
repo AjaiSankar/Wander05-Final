@@ -82,19 +82,19 @@ class KozhikodePage extends StatelessWidget {
                   _buildSightCard(
                     'images/ko2.png',
                     'Beypore',
-                    'Beypore is known for its ancient port and traditional shipbuilding industry.',
+                    'Beypore is known for its ancient port.',
                     4.3,
                   ),
                   _buildSightCard(
                     'images/ko3.png',
                     'Kappad Beach',
-                    'Kappad Beach is where Vasco da Gama first set foot on Indian soil.',
+                    'Kappad Beach,where Vasco da Gama first set foot on Indian soil.',
                     4.6,
                   ),
                   _buildSightCard(
                     'images/ko4.png',
                     'Thusharagiri Waterfalls',
-                    'Thusharagiri Waterfalls is a picturesque waterfall located in the Western Ghats.',
+                    'Thusharagiri Waterfalls is a picturesque waterfall.',
                     4.4,
                   ),
                 ],

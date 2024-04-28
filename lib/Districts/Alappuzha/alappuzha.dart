@@ -116,8 +116,8 @@ class AlappuzhaPage extends StatelessWidget {
                   children: [
                     _buildFoodSpotCard(
                       'images/ala1.png',
-                      'Indian Coffee House Alappuzha',
-                      'Description of Indian Coffee House Alappuzha',
+                      'Indian Coffee House',
+                      'Description of Indian Coffee House',
                       4.5,
                     ),
                     _buildFoodSpotCard(
@@ -128,8 +128,8 @@ class AlappuzhaPage extends StatelessWidget {
                     ),
                     _buildFoodSpotCard(
                       'images/ala3.png',
-                      'Ripples Multi Cuisine Restaurant Alappuzha',
-                      'Ripples Multi Cuisine Restaurant Alappuzha',
+                      'Ripples Multi Cuisine Restaurant',
+                      'Ripples Multi Cuisine Restaurant',
                       4.8,
                     ),
                   ],

@@ -76,29 +76,25 @@ class ThrissurPage extends StatelessWidget {
                   _buildSightCard(
                     'images/thh1.png',
                     'Vadakkunnathan Temple',
-                    'Vadakkunnathan Temple is an ancient Hindu temple dedicated to Lord Shiva, '
-                        'known for its magnificent architecture and religious significance.',
+                    'Vadakkunnathan Temple,known for its magnificent architecture and religious significance.',
                     4.5,
                   ),
                   _buildSightCard(
                     'images/th2.png',
                     'Thrissur Pooram',
-                    'Thrissur Pooram is the most famous temple festival in Kerala, known for its '
-                        'spectacular processions, elephant pageantry, and traditional percussion performances.',
+                    'Thrissur Pooram is the most famous temple festival in Kerala.',
                     4.8,
                   ),
                   _buildSightCard(
                     'images/th3.png',
                     'Shakthan Thampuran Palace',
-                    'Shakthan Thampuran Palace is a cultural heritage monument in Thrissur, '
-                        'known for its architectural beauty and historical significance.',
+                    'Shakthan Thampuran Palace,known for its architectural beauty and historical significance.',
                     4.3,
                   ),
                   _buildSightCard(
                     'images/th4.png',
                     'Athirappilly Waterfalls',
-                    'Athirappilly Waterfalls is the largest waterfall in Kerala, located in the '
-                        'western Ghats amidst lush green forests, a popular tourist destination.',
+                    'Athirappilly Waterfalls is the largest waterfall in Kerala.',
                     4.6,
                   ),
                 ],

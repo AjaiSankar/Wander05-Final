@@ -16,6 +16,7 @@ import 'package:wander05_final/Districts/Palakkad/palakkad.dart';
 import 'package:wander05_final/Districts/Pathanamthitta/pathanamthitta.dart';
 import 'package:wander05_final/Districts/Thrissur/thrissur.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
+import 'package:wander05_final/Districts/Wayanad/Wayanad.dart';
 import 'package:wander05_final/UserProfilePage.dart';
 import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
@@ -485,6 +486,8 @@ class DistrictSearch extends SearchDelegate<String> {
         return KozhikodePage();
       case 'Malappuram':
         return MalappuramPage();
+      case 'Wayanad':
+        return WayanadPage();
       default:
         return Container();
     }

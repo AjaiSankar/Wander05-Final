@@ -76,30 +76,25 @@ class ErnakulamPage extends StatelessWidget {
                   _buildSightCard(
                     'images/fortkochi.png',
                     'Fort Kochi',
-                    'Fort Kochi is a historic neighborhood known for its colonial architecture, '
-                        'beaches, and vibrant art scene.',
+                    'Fort Kochi is a historic neighborhood known for its colonial architecture',
                     4.5,
                   ),
                   _buildSightCard(
                     'images/mattachery.png',
                     'Mattancherry Palace',
-                    'Mattancherry Palace, also known as the Dutch Palace, is a Portuguese palace '
-                        'known for its Kerala murals depicting Hindu temple art, portraits, and exhibits '
-                        'from the royal family.',
+                    'Mattancherry Palace, also known as the Dutch Palace, is a Portuguese palace known for its Kerala murals from the royal family.',
                     4.3,
                   ),
                   _buildSightCard(
                     'images/cherari.png',
                     'Cherai Beach',
-                    'Cherai Beach is a beautiful beach located on the northern end of Vypin Island, '
-                        'famous for its serene beauty and golden sands.',
+                    'Cherai Beach famous for its serene beauty and golden sands.',
                     4.6,
                   ),
                   _buildSightCard(
                     'images/hillpalace.png',
                     'Hill Palace',
-                    'Hill Palace is the largest archaeological museum in Kerala, featuring a rich '
-                        'collection of artifacts belonging to the erstwhile Maharaja of Kochi.',
+                    'Hill Palace is the largest archaeological museum in Kerala, belonging to the Maharaja of Kochi.',
                     4.4,
                   ),
                 ],

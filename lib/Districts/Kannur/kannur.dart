@@ -76,25 +76,25 @@ class KannurPage extends StatelessWidget {
                   _buildSightCard(
                     'images/kannur1.png',
                     'St. Angelo Fort',
-                    'St. Angelo Fort, also known as Kannur Fort, is a 16th-century fort overlooking the Arabian Sea.',
+                    'St. Angelo Fort, also known as Kannur Fort.',
                     4.5,
                   ),
                   _buildSightCard(
                     'images/kannur2.png',
                     'Payyambalam Beach',
-                    'Payyambalam Beach is a beautiful beach known for its golden sands and serene atmosphere.',
+                    'Payyambalam Beach,beautiful beach known for its golden sands.',
                     4.3,
                   ),
                   _buildSightCard(
                     'images/kannur3.png',
                     'Dharmadam Island',
-                    'Dharmadam Island, also known as Green Island, is a small private island near Thalassery.',
+                    'Dharmadam Island, also known as Green Island.',
                     4.6,
                   ),
                   _buildSightCard(
                     'images/kannur4.png',
                     'Parassinikadavu Muthappan Temple',
-                    'Parassinikadavu Muthappan Temple is a Hindu temple known for its Theyyam rituals.',
+                    'Parassinikadavu Muthappan Temple, Hindu temple known for its Theyyam rituals.',
                     4.4,
                   ),
                 ],
@@ -116,8 +116,8 @@ class KannurPage extends StatelessWidget {
                   children: [
                     _buildFoodSpotCard(
                       'images/kan1.png',
-                      'Odyssey Sea View Restaurant',
-                      'Description of Odyssey Sea View Restaurant',
+                      'Odyssey Restaurant',
+                      'Description of Odyssey Restaurant',
                       4.5,
                     ),
                     _buildFoodSpotCard(

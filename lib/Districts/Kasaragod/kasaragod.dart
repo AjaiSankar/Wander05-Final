@@ -77,13 +77,13 @@ class KasaragodPage extends StatelessWidget {
                   _buildSightCard(
                     'images/kas1.png',
                     'Bekal Fort',
-                    'Bekal Fort is a historic fort situated on the shores of the Arabian Sea.',
+                    'Bekal Fort, situated on the shores of the Arabian Sea.',
                     4.5,
                   ),
                   _buildSightCard(
                     'images/kas2.png',
                     'Kappil Beach',
-                    'Kappil Beach is a serene beach located near the Bekal Fort.',
+                    'Kappil Beach,located near the Bekal Fort.',
                     4.3,
                   ),
                   _buildSightCard(

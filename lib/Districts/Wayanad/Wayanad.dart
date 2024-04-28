@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PathanamthittaPage extends StatelessWidget {
+class WayanadPage extends StatelessWidget {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pathanamthitta Beauty'),
+        title: Text('Wayanad Beauty'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -20,14 +20,14 @@ class PathanamthittaPage extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/pathanamthittacover.png'),
+                    image: AssetImage('images/wayanadcover.png'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
                   child: Text(
-                    'Welcome to Pathanamthitta',
+                    'Welcome to Wayanad',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -37,26 +37,27 @@ class PathanamthittaPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16),
-              // Text description of Pathanamthitta
+              // Text description of Wayanad
               Text(
-                'Pathanamthitta is a district in the southern part of Kerala, India. '
-                'Known for its natural beauty and religious significance, '
-                'Pathanamthitta is often referred to as the "Pilgrim Capital of Kerala". '
-                'The district is home to several temples, churches, and scenic spots.',
+                'Wayanad is a district in the Indian state of Kerala. '
+                'It is known for its picturesque landscapes, rich biodiversity, '
+                'and vibrant culture. Wayanad is home to lush green forests, '
+                'pristine waterfalls, and ancient caves.',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),
-              // Speciality icons representing different aspects of Pathanamthitta
+              // Speciality icons representing different aspects of Wayanad
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildSpecialityIcon(Icons.beach_access, 'Nature'),
-                  _buildSpecialityIcon(Icons.local_dining, 'Cuisine'),
-                  _buildSpecialityIcon(Icons.history, 'Culture'),
+                  _buildSpecialityIcon(Icons.nature, 'Nature'),
+                  _buildSpecialityIcon(Icons.history, 'History'),
+                  _buildSpecialityIcon(Icons.local_offer, 'Culture'),
+                  _buildSpecialityIcon(Icons.local_activity, 'Adventure'),
                 ],
               ),
               SizedBox(height: 16),
-              // Top sights in Pathanamthitta
+              // Top sights in Wayanad
               Text(
                 'Top Sights',
                 style: TextStyle(
@@ -73,27 +74,27 @@ class PathanamthittaPage extends StatelessWidget {
                 mainAxisSpacing: 8,
                 children: [
                   _buildSightCard(
-                    'images/pat1.png',
-                    'Sabarimala Temple',
-                    'Sabarimala Temple is a famous Hindu pilgrimage site dedicated to Lord Ayyappa.',
+                    'images/waya1.png',
+                    'Soochipara Waterfalls',
+                    'Soochipara Waterfalls is a scenic waterfall.',
                     4.5,
                   ),
                   _buildSightCard(
-                    'images/pat2.png',
-                    'St. Mary\'s Orthodox Church',
-                    'St. Mary\'s Orthodox Church is a historic church known for its architecture and religious significance.',
+                    'images/waya2.png',
+                    'Edakkal Caves',
+                    'Edakkal Caves are ancient caves with rock carvings.',
                     4.3,
                   ),
                   _buildSightCard(
-                    'images/pat3.png',
-                    'Perunthenaruvi Waterfalls',
-                    'Perunthenaruvi Waterfalls is a stunning natural waterfall offering breathtaking views and trekking opportunities.',
+                    'images/waya3.png',
+                    'Chembra Peak',
+                    'Chembra Peak is the highest peak in Wayanad.',
                     4.6,
                   ),
                   _buildSightCard(
-                    'images/pat4.png',
-                    'Kakki Reservoir',
-                    'Kakki Reservoir is a picturesque dam surrounded by lush greenery, ideal for picnics and nature walks.',
+                    'images/waya4.png',
+                    'Pookode Lake',
+                    'Pookode Lake is a natural freshwater lake.',
                     4.4,
                   ),
                 ],
@@ -114,21 +115,21 @@ class PathanamthittaPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   children: [
                     _buildFoodSpotCard(
-                      'images/patf1.png',
-                      'Kumbazha Cafe',
-                      'Description of Kumbazha Cafe',
+                      'images/wa1.png',
+                      'ClayHut Restaurant',
+                      'Description of ClayHut Restaurant',
                       4.5,
                     ),
                     _buildFoodSpotCard(
-                      'images/patf2.png',
-                      'Hotel Evergreen Continental',
-                      'Hotel Evergreen Continental',
+                      'images/wa2.png',
+                      'Wilsons Restaurant',
+                      'Description of Wilsons Restaurant',
                       4.2,
                     ),
                     _buildFoodSpotCard(
-                      'images/patf3.png',
-                      'Black Fort Cafe And Grill Resto',
-                      'Black Fort Cafe And Grill Resto',
+                      'images/wa3.png',
+                      'Milestone Restaurant',
+                      'Description of Milestone Restaurant',
                       4.8,
                     ),
                   ],
