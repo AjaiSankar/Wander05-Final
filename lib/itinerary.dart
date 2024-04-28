@@ -266,7 +266,7 @@ class _ItineraryState extends State<Itinerary> {
   }
 
   Future<void> _showWeatherForDestination(BuildContext context, String destinationName, LatLng latLng) async {
-    final WeatherFactory _wf = WeatherFactory('a48d6e22b59b03975e2a22d684bab340');
+    final WeatherFactory _wf = WeatherFactory('API HERE');
     final weather = await _wf.currentWeatherByLocation(latLng.latitude, latLng.longitude);
 
     // ignore: use_build_context_synchronously
