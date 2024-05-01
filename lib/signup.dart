@@ -41,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Image.asset(
-                      'assets/logo1.png', // Replace with your logo image path
+                      'images/logo1.png', // Replace with your logo image path
                       height: 100, // Adjust the height as needed
                     ),
                   ),
