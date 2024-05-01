@@ -48,7 +48,6 @@ dependencies:
   firebase_auth: ^4.17.4
   datetime_picker_formfield: ^2.0.1
   google_sign_in: ^6.2.1
-  cloud_firestore: ^4.15.8
   flutter_local_notifications: ^17.1.0
   flutter_map: ^6.1.0
   latlong2: ^0.9.1

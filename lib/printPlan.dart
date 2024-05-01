@@ -12,123 +12,52 @@ import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wander05_final/hotel.dart';
 import 'package:weather/weather.dart';
+class PrintPlans extends StatefulWidget {
+  final String plan;
+  final String splace;
+  final String dplace;
 
-class Itinerary extends StatefulWidget {
-  final String startplace;
-  final String destinationCountry;
-  final String budget;
-  final String travelStyle;
-  final List interestsNew;
-  final String accommodationType;
-  final String transportationType;
-  final String activityType;
-  final String cuisineType;
-  final String tripDuration;
-
-  const Itinerary({
+  const PrintPlans({
     Key? key,
-    required this.startplace,
-    required this.destinationCountry,
-    required this.budget,
-    required this.travelStyle,
-    required this.interestsNew,
-    required this.accommodationType,
-    required this.transportationType,
-    required this.activityType,
-    required this.cuisineType,
-    required this.tripDuration,
+    required this.plan,
+    required this.splace,
+    required this.dplace,
   }) : super(key: key);
 
   @override
-  State<Itinerary> createState() => _ItineraryState();
+  State<PrintPlans> createState() => _PrintPlansState();
 
-  void fetchResponse() {}
 }
-
-class _ItineraryState extends State<Itinerary> {
+class _PrintPlansState extends State<PrintPlans> {
   
   LatLng initialCenter = const LatLng(9.850, 76.271); // Default initial center
   double currentZoom = 9.0;
-  String result = '';
+  String _result = '';
   String _typingText = '';
   String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
-  final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "API KEY here";
+
   void initState() {
+    _result = widget.plan;
     super.initState();
     _getLocation();
-  }
-  Future<void> fetchResponse(
-    String startplace,
-    String destinationCountry,
-    String budget,
-    String travelStyle,
-    List interestsNew,
-    String accommodationType,
-    String transportationType,
-    String activityType,
-    String cuisineType,
-    String tripDuration,
-  ) async {
-    setState(() {
-      _typingText = 'Generating\nitinerary';
-      _typingText1 = 'Creating your plan..';
-    });
-
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $apiKey",
-      },
-      body: jsonEncode({
-        "model": "gpt-3.5-turbo",
-        "messages": [
-          {
-            "role": "system",
-            "content": "You are a helpful assistant."
-          },
-          {
-            "role": "user",
-            "content":
-            "Generate a personalized travel itinerary for a trip from $startplace to $destinationCountry, considering a budget of ₹$budget. Ensure that the trip stays within the specified budget. The traveler prefers a $travelStyle vacation and enjoys $interestsNew. They seek $accommodationType accommodations and prefer $transportationType transportation. The itinerary should span $tripDuration days, featuring a mix of activities and dining options. For each day of the trip, provide detailed recommendations with morning, afternoon, and evening activities, along with their approximate costs. Include suggested destinations, activities, and dining spots. Ensure that the chosen path from $startplace to $destinationCountry is optimal, incorporating attractions along the route. Format the itinerary consistently as follows: Day X (Activity/Travel): Morning Activity: Cost: ₹ Afternoon Activity: Cost: ₹ Evening Activity: Cost: ₹. At the end of the itinerary, provide a list of all mentioned places along with their respective latitude and longitude coordinates for navigation purposes, ensuring they are listed in the correct order from the start to the destination along the optimal path. Estimated Total Cost: ₹. Approximate Costs: Accommodation: ₹ Transportation: ₹,Activities: ₹ per activity Dining: ₹ per meal. Make sure to print latitude and longitude of all mention places and destinations, the heading of it should be ""Destinations and Coordinates:"" and the format should be ""Place Name (Latitude, Longitude)"", it should only be at the end of plan"}
-        ],
-      }),
-    );
-    if (response.statusCode == 200) {
-      setState(() {
-        result = jsonDecode(response.body)['choices'][0]['message']['content'];
-        _typingText = '';
-      });
-
-      // Print the response to the console
-      print("Response: $result");
-    } else {
-      setState(() {
-        _typingText = '';
-      });
-      print('Request failed with status: ${response.statusCode}.');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to load response: ${response.body}');
-    }
-    
   }
 
   
   @override
   Widget build(BuildContext context) {
+        _result = widget.plan;
+        print("plan"+ _result);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.destinationCountry,
+          widget.dplace,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
-        //  backgroundColor: Colors.blue,    changed ajai
-          //elevation: 0, // Remove elevation
         ),
         backgroundColor: Colors.blue,
         elevation: 0, // Remove elevation
@@ -145,18 +74,7 @@ class _ItineraryState extends State<Itinerary> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        fetchResponse(
-                          widget.startplace,
-                          widget.destinationCountry,
-                          widget.budget,
-                          widget.travelStyle,
-                          widget.interestsNew,
-                          widget.accommodationType,
-                          widget.transportationType,
-                          widget.activityType,
-                          widget.cuisineType,
-                          widget.tripDuration,
-                        );
+                      _buildItinerary;
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue, // Button color
@@ -185,18 +103,18 @@ class _ItineraryState extends State<Itinerary> {
 
                               // Save the plan to Firestore with a unique document ID
                               await itineraryCollectionRef.add({
-                                'plan': result,
+                                'plan': _result,
                                 'timestamp': FieldValue.serverTimestamp(),
-                                'startplace': widget.startplace,
-                                'destination': widget.destinationCountry,
+                                'startplace': widget.splace,
+                                'destination': widget.dplace,
                                 'userid':user.uid,
                               });
 
                               await allplan.add({
-                                'plan': result,
+                                'plan': _result,
                                 'timestamp': FieldValue.serverTimestamp(),
-                                'startplace': widget.startplace,
-                                'destination': widget.destinationCountry,
+                                'startplace': widget.splace,
+                                'destination': widget.dplace,
                                 'userid':user.uid,
                               });
 
@@ -305,7 +223,7 @@ class _ItineraryState extends State<Itinerary> {
     return SizedBox(
       height: 520,
       width: double.infinity, // Set a specific height
-      child: HotelPage(destinationCountry: widget.destinationCountry),
+      child: HotelPage(destinationCountry: widget.dplace),
     );
   }
 
@@ -342,11 +260,11 @@ class _ItineraryState extends State<Itinerary> {
   }
 
   Widget _buildItinerary() {
-  if (result.isEmpty) {
+  if (_result.isEmpty) {
     return const Center(child: Text("No itinerary generated yet"));
   }
 
-  List<String> days = result.split('Day ');
+  List<String> days = _result.split('Day ');
   days.removeAt(0); // Remove the first empty element
 
   List<Map<String, LatLng>> destinations = [];
