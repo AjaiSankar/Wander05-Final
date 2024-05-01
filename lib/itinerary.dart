@@ -1,19 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get_navigation/src/routes/default_transitions.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wander05_final/hotel.dart';
-import 'package:wander05_final/weather/weather.dart';
 import 'package:weather/weather.dart';
 
 class Itinerary extends StatefulWidget {
@@ -57,7 +54,7 @@ class _ItineraryState extends State<Itinerary> {
   String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "API KEY HERE";
+  final String apiKey = "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";
   void initState() {
     super.initState();
     _getLocation();
@@ -171,24 +168,69 @@ class _ItineraryState extends State<Itinerary> {
                     ),
                     // Save Plan button with animation
                     AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
+                      duration: Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
                       child: ElevatedButton(
-                        onPressed: () {
-                          // Add functionality to save plan
-                          // For example: savePlan();
+                        onPressed: () async {
+                          try {
+                            // Get the current user
+                            User? user = FirebaseAuth.instance.currentUser;
+
+                            if (user != null) {
+                              // Reference to the user's itinerary collection
+                              CollectionReference itineraryCollectionRef = FirebaseFirestore.instance.collection('itinerary').doc(user.uid).collection('plans');
+                              CollectionReference allplan = FirebaseFirestore.instance.collection('allplans');
+
+                              // Save the plan to Firestore with a unique document ID
+                              await itineraryCollectionRef.add({
+                                'plan': result,
+                                'timestamp': FieldValue.serverTimestamp(),
+                                'startplace': widget.startplace,
+                                'destination': widget.destinationCountry,
+                                'userid':user.uid,
+                              });
+
+                              await allplan.add({
+                                'plan': result,
+                                'timestamp': FieldValue.serverTimestamp(),
+                                'startplace': widget.startplace,
+                                'destination': widget.destinationCountry,
+                                'userid':user.uid,
+                              });
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Plan saved successfully!'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            } else {
+                              throw Exception('User is not authenticated.');
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to save plan. Please try again.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                            print('Error saving plan: $e');
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue, // Button color
-                          foregroundColor: Colors.white, // Text color
-                          padding: const EdgeInsets.all(16),
+                          foregroundColor: Colors.white, backgroundColor: Colors.green, // Text color
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // Rounded corners
+                          ),
+                          elevation: 3, // Button elevation
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
                             Icon(Icons.save),
                             SizedBox(width: 8),
                             Text(
-                              'Save Plan',
+                              'Save\nPlan',
                               style: TextStyle(fontSize: 18),
                             ),
                           ],
@@ -266,7 +308,7 @@ class _ItineraryState extends State<Itinerary> {
   }
 
   Future<void> _showWeatherForDestination(BuildContext context, String destinationName, LatLng latLng) async {
-    final WeatherFactory _wf = WeatherFactory('API HERE');
+    final WeatherFactory _wf = WeatherFactory('a48d6e22b59b03975e2a22d684bab340');
     final weather = await _wf.currentWeatherByLocation(latLng.latitude, latLng.longitude);
 
     // ignore: use_build_context_synchronously

@@ -3,7 +3,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:wander05_final/Districts/Alappuzha/alappuzha.dart';
+import 'package:wander05_final/Districts/Ernakulam/ernakulam.dart';
+import 'package:wander05_final/Districts/Idukki/idukki.dart';
+import 'package:wander05_final/Districts/Kannur/kannur.dart';
+import 'package:wander05_final/Districts/Kasaragod/kasaragod.dart';
+import 'package:wander05_final/Districts/Kollam/kollam.dart';
+import 'package:wander05_final/Districts/Kottayam/kottayam.dart';
+import 'package:wander05_final/Districts/Kozhikode/kozhikode.dart';
+import 'package:wander05_final/Districts/Malappuram/malappuram.dart';
+import 'package:wander05_final/Districts/Palakkad/palakkad.dart';
+import 'package:wander05_final/Districts/Pathanamthitta/pathanamthitta.dart';
+import 'package:wander05_final/Districts/Thrissur/thrissur.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
+import 'package:wander05_final/Districts/Wayanad/Wayanad.dart';
 import 'package:wander05_final/UserProfilePage.dart';
 import 'package:wander05_final/budget.dart';
 import 'package:wander05_final/firebase_options.dart';
@@ -633,8 +646,31 @@ class DistrictSearch extends SearchDelegate<String> {
       case 'Thiruvananthapuram':
         return TrivandrumPage();
       case 'Kollam':
-        return TrivandrumPage();
-      
+        return KollamPage();
+      case 'Alappuzha':
+        return AlappuzhaPage();
+      case 'Pathanamthitta':
+        return PathanamthittaPage();
+      case 'Kottayam':
+        return KottayamPage();
+      case 'Ernakulam':
+        return ErnakulamPage();
+      case 'Idukki':
+        return IdukkiPage();
+      case 'Thrissur':
+        return ThrissurPage();
+      case 'Palakkad':
+        return PalakkadPage();
+      case 'Kannur':
+        return KannurPage();
+      case 'Kasaragod':
+        return KasaragodPage();
+      case 'Kozhikode':
+        return KozhikodePage();
+      case 'Malappuram':
+        return MalappuramPage();
+      case 'Wayanad':
+        return WayanadPage();
       default:
         return Container();
     }
