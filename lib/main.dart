@@ -18,6 +18,7 @@ import 'package:wander05_final/Districts/Thrissur/thrissur.dart';
 import 'package:wander05_final/Districts/Trivandum/trivandrum.dart';
 import 'package:wander05_final/Districts/Wayanad/Wayanad.dart';
 import 'package:wander05_final/UserProfilePage.dart';
+import 'package:wander05_final/aiplans.dart';
 import 'package:wander05_final/budget.dart';
 import 'package:wander05_final/firebase_options.dart';
 import 'package:wander05_final/it.dart';
@@ -514,7 +515,7 @@ class _HomePageState extends State<HomePage> {
     TabItem(icon: Icons.map, title: 'My Trips'),
     TabItem(icon: Icons.add, title: 'New Trip'),
     TabItem(icon: Icons.hotel, title: 'Disasters'),
-    TabItem(icon: Icons.people, title: 'Profile'),
+    TabItem(icon: Icons.file_copy, title: 'Ai Plans'),
   ],
   onTap: (int index) {
     if (index == 3) {
@@ -525,7 +526,7 @@ class _HomePageState extends State<HomePage> {
     } else if (index == 4) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UserProfilePage()),
+        MaterialPageRoute(builder: (context) => AiTripsPage()),
       );
     }
     else if (index == 1){

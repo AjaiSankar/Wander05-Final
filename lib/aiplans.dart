@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wander05_final/budget.dart';
+import 'package:wander05_final/budgetno.dart';
 import 'package:wander05_final/printPlan.dart';
 
-class MyTripsPage extends StatelessWidget {
+class AiTripsPage extends StatelessWidget {
   final List<String> images = ['plan1', 'plan2', 'plan3', 'plan4', 'plan5'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Trips'),
+        title: Text('AI Trip Plans'),
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
-        future: fetchSavedPlans(),
+        future: fetchRandomPlans(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -93,7 +94,7 @@ class MyTripsPage extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BudgetTrackerPage(tripId: tripId),
+        builder: (context) => CannotManageBudgetPage(),
       ),
     );
   } else {
@@ -163,26 +164,27 @@ class MyTripsPage extends StatelessWidget {
     );
   }
 
-  Future<List<DocumentSnapshot>> fetchSavedPlans() async {
-    try {
-      // Get the current user's UID
-      String userId = FirebaseAuth.instance.currentUser!.uid;
+  Future<List<DocumentSnapshot>> fetchRandomPlans() async {
+  try {
+    // Reference to the allplans collection
+    CollectionReference allPlansCollectionRef = FirebaseFirestore.instance.collection('allplans');
 
-      // Reference to the user's plans collection
-      CollectionReference plansCollectionRef = FirebaseFirestore.instance
-          .collection('itinerary')
-          .doc(userId)
-          .collection('plans');
+    // Fetch all plans
+    QuerySnapshot querySnapshot = await allPlansCollectionRef.get();
 
-      // Fetch the user's plans
-      QuerySnapshot querySnapshot = await plansCollectionRef.get();
+    // Shuffle the list of plans
+    List<DocumentSnapshot> allPlans = querySnapshot.docs;
+    allPlans.shuffle();
 
-      return querySnapshot.docs;
-    } catch (e) {
-      print('Error fetching saved plans: $e');
-      return [];
-    }
+    // Select the first 10 plans or less if there are fewer plans available
+    List<DocumentSnapshot> randomPlans = allPlans.take(10).toList();
+
+    return randomPlans;
+  } catch (e) {
+    print('Error fetching random plans: $e');
+    return [];
   }
+}
 
 //   void _showFullPlan(BuildContext context, String plan) {
 //     showDialog(
