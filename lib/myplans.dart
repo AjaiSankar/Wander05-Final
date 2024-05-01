@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wander05_final/budget.dart';
+import 'package:wander05_final/printPlans.dart';
 
 class MyTripsPage extends StatelessWidget {
-  final List<String> images = ['main1', 'main2', 'main3', 'main4', 'main5'];
+  final List<String> images = ['plan1', 'plan2', 'plan3', 'plan4', 'plan5'];
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class MyTripsPage extends StatelessWidget {
                         print('Tapped on card: $index');
                         // Display the full plan
                         print('Full plan: ${plans[index]['plan']}');
-                        _showFullPlan(context, plans[index]['plan']);
+                        //_showFullPlan(context, plans[index]['plan']);
                       },
                       child: Card(
                         margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -88,21 +89,16 @@ class MyTripsPage extends StatelessWidget {
                                           onPressed: () {
     // Get the trip ID from the DocumentSnapshot
     String? tripId = plans.isNotEmpty ? plans[index].id : null; // Assuming the trip ID is the document ID
-// if (tripId != null) {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => BudgetTrackerPage(: tripId,),
-//     ),
-//   );
-// } else {
-//   // Handle the case when tripId is null, for example, display an error message
-//   ScaffoldMessenger.of(context).showSnackBar(
-//     SnackBar(
-//       content: Text('Trip ID is not valid.'),
-//     ),
-//   );
-// }
+  if (tripId != null) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BudgetTrackerPage(tripId: tripId),
+      ),
+    );
+  } else {
+    // Handle the case where tripId is null, such as showing an error message or navigating to a default page
+  }
 
   },
                                           style: ElevatedButton.styleFrom(
@@ -121,10 +117,21 @@ class MyTripsPage extends StatelessWidget {
                                       SizedBox(
                                         width: 120, // Adjust width as needed
                                         child: ElevatedButton(
-                                          onPressed: () {
-                                            // View the plan
-                                            _showFullPlan(context, plans[index]['plan']);
-                                          },
+                                           onPressed: () {
+                                            print("Plan: "+ plans[index]['plan']);
+            // Navigate to PrintPlans class and pass the argument 'pass'
+            Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => PrintPlans(
+  
+      plan: plans[index]['plan'],
+      dplace: destination,
+      splace: startPlace,
+    ),
+  ),
+);
+          },
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.blue,
                                             textStyle: TextStyle(color: Colors.white),
@@ -177,25 +184,35 @@ class MyTripsPage extends StatelessWidget {
     }
   }
 
-  void _showFullPlan(BuildContext context, String plan) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Full Plan'),
-          content: SingleChildScrollView(
-            child: Text(plan),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+//   void _showFullPlan(BuildContext context, String plan) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text('Full Plan'),
+//           content: SingleChildScrollView(
+//             child: Text(plan),
+//           ),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//             // Navigate to PrintPlans class and pass the argument 'pass'
+//             Navigator.push(
+//   context,
+//   MaterialPageRoute(
+//     builder: (context) => PrintPlans(
+//       plan: plan,
+//       destination: destination,
+//       startPlace: startPlace,
+//     ),
+//   ),
+// );
+//           },
+//               child: Text('Close'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
 }
