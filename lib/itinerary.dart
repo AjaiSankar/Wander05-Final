@@ -54,7 +54,7 @@ class _ItineraryState extends State<Itinerary> {
   String _typingText1 = '';
   final TextEditingController _controller = TextEditingController();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  final String apiKey = "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";
+  final String apiKey = "API KEY here";
   void initState() {
     super.initState();
     _getLocation();
@@ -308,7 +308,7 @@ class _ItineraryState extends State<Itinerary> {
   }
 
   Future<void> _showWeatherForDestination(BuildContext context, String destinationName, LatLng latLng) async {
-    final WeatherFactory _wf = WeatherFactory('a48d6e22b59b03975e2a22d684bab340');
+    final WeatherFactory _wf = WeatherFactory('API KEY Here');
     final weather = await _wf.currentWeatherByLocation(latLng.latitude, latLng.longitude);
 
     // ignore: use_build_context_synchronously
